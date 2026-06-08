@@ -1,0 +1,646 @@
+/* =========================================
+   BARRA LATERAL E REESTRUTURAÇÃO DO LAYOUT
+========================================= */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    height: 100vh;
+    overflow: hidden; 
+    box-sizing: border-box;
+    
+    /* Configura o fluxo horizontal (Sidebar na esquerda + Main na direita) */
+    display: flex;
+    flex-direction: row;
+}
+
+/* Estrutura da Barra Lateral */
+.barra-lateral {
+    width: 250px;
+    background-color: #002d62; /* O azul escuro padrão dos filtros */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0px 10px rgba(0,0,0,0.08);
+    flex-shrink: 0;
+}
+
+.logo-painel {
+    padding: 22px 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.logo-painel h2 {
+    font-size: 20px;
+    margin: 0;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.menu-navegacao {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px 12px;
+}
+
+/* Botões Modernos e Delicados da Sidebar */
+.btn-nav {
+    background: transparent;
+    color: #94a3b8; /* Cor discreta quando não selecionado */
+    border: none;
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s ease;
+}
+
+.btn-nav:hover {
+    background-color: rgba(255,255,255,0.05);
+    color: white;
+}
+
+.btn-nav.ativo {
+    background-color: white;
+    color: #002d62; /* Contraste elegante invertido */
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+}
+
+.btn-nav svg {
+    stroke: currentColor;
+}
+
+/* Espaço do Painel na Direita */
+.conteudo-principal {
+    flex: 1;
+    padding: 15px 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    position: relative; /* Base de ancoragem estável para o filtro flutuante */
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Ajuste do Filtro para alinhar ao limite superior do conteúdo principal */
+.filtro-container-wrapper {
+    position: absolute;
+    top: 15px;
+    right: 20px; 
+    z-index: 2000;
+    display: inline-block;
+}
+
+/* Alternador das Páginas Internas */
+.pagina-view {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 26px;
+    flex-shrink: 0;
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+/* ================================================================================================================================
+   PAGINA GERAL
+==================================================================================================================================== */
+
+/* =========================================
+   NOVO SISTEMA DE FILTROS FLUTUANTE
+========================================= */
+
+.filtro-container-wrapper {
+    position: fixed;
+    top: 15px;
+    right: 25px; 
+    z-index: 2000;
+    display: inline-block;
+}
+
+.btn-filtros-novo {
+    background: white;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0px 1px 3px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.btn-filtros-novo:hover {
+    background-color: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.filtros-card {
+    position: absolute;
+    top: 48px;
+    right: 0;
+    width: 280px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    display: none; 
+    flex-direction: column;
+    gap: 16px;
+    max-height: 80vh; 
+    overflow-y: auto;
+}
+
+.filtros-card.aberto {
+    display: flex;
+}
+
+/* Espaçamento interno de cada bloco de filtro */
+.filtro-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;               /* Aumentado de 6px para 10px: afasta o título do conteúdo interno */
+    margin-bottom: 18px;     /* Adicionado: cria uma distância elegante entre um bloco de variável e o próximo */
+}
+
+/* Estilização do nome das variáveis */
+.filtro-titulo {
+    font-size: 14px;         /* Ajustado para destacar melhor */
+    font-weight: 700;
+    color: #002d62; 
+    margin-bottom: 4px;      /* Adicionado: garante um espaço extra antes do input/select abaixo dele */
+}
+
+/* Garante o espaçamento correto na lista de checkboxes também */
+.checkbox-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;                /* Aumentado de 6px para 8px para os itens de checkbox não ficarem colados */
+}
+
+
+.filtro-select, .filtro-select-ano {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    color: #1e293b;
+    padding: 6px 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background-color: #fff;
+    cursor: pointer;
+    outline: none;
+    width: 100%;
+}
+
+.filtro-select-ano {
+    width: 85px;
+}
+
+.filtro-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #1e3a5f; 
+    cursor: pointer;
+    font-weight: 400;
+}
+
+.filtro-checkbox-label input[type="checkbox"] {
+    accent-color: #002d62; 
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+}
+
+/* =========================================
+   BOTÃO LIMPAR FILTROS
+========================================= */
+
+.btn-limpar-filtros {
+    background-color: #fff;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    padding: 10px 12px;       /* Aumentado o padding vertical para dar mais corpo ao botão */
+    border-radius: 6px;
+    font-size: 13px;          /* Aumentado levemente o texto para equilibrar */
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    
+    /* SOLUÇÃO DO TAMANHO: Garante que ele ocupe toda a largura disponível no card */
+    width: 100%; 
+    box-sizing: border-box;
+    margin-bottom: 20px;      /* Aumentada a distância entre o botão e o primeiro filtro (Ano) */
+}
+
+/* =========================================
+   CARDS SUPERIORES
+========================================= */
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-shrink: 0;
+}
+
+.card {
+    background: white;
+    padding: 12px 15px;
+    border-radius: 12px;
+    flex: 1;
+    min-width: 180px;
+    box-shadow: 0px 2px 8px rgba(0,0,0,0.06);
+}
+
+.card h3 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: #555;
+}
+
+.card p {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.info {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    color: #555;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: help;
+    margin-left: 4px;
+}
+
+/* =========================================
+   GRID PRINCIPAL
+========================================= */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 15px;
+    flex: 1; 
+    min-height: 0; 
+    margin-bottom: 5px;
+}
+
+.painel-esquerda {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 100%;
+    min-height: 0;
+}
+
+.grafico-box {
+    background: white;
+    border-radius: 10px;
+    padding: 12px;
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+    min-height: 0; 
+    box-shadow: 0px 2px 8px rgba(0,0,0,0.05);
+}
+
+.grafico {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+}
+
+#graficoInscritos, #graficoPresenca {
+    width: 100% !important;
+    height: 100% !important; 
+}
+
+/* =========================================
+   PAINEL DIREITO E TABELA
+========================================= */
+
+.painel-direita {
+    display: flex;
+    width: 100%;       
+    height: 100%;      
+    min-height: 0;
+    align-items: stretch; 
+}
+
+.tabela-container {
+    background-color: white; 
+    border-radius: 10px;    
+    padding: 15px;          
+    box-shadow: 0px 2px 9px rgba(0,0,0,0.05); 
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#tabelaRedacao {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: transparent;
+}
+
+#tabelaRedacao th, #tabelaRedacao td {
+    padding: 13px 12px;  
+    border-bottom: 2px solid #ccc; 
+    font-size: 12px;
+    text-align: left;
+    background-color: transparent;
+}
+
+#tabelaRedacao th {
+    font-weight: bold;
+    border-bottom: 3px solid #999; 
+    position: sticky;
+    top: 0;
+}
+
+/* =========================================
+   RESPONSIVIDADE EXTRA
+========================================= */
+@media(max-width: 900px) {
+    body { height: auto; overflow-y: auto; }
+    .dashboard-grid { grid-template-columns: 1fr; height: auto; }
+    #graficoInscritos, #graficoPresenca { height: 250px !important; }
+}
+
+
+/* ========================================================================================================================
+   PÁGINA PERFIL
+=========================================================================================================================== */
+
+.filtro-container-wrapper-perfil {
+    position: fixed;
+    top: 15px;
+    right: 25px;
+    z-index: 2000;
+    display: inline-block;
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 5px; /* <--- REDUZIDO PARA 5px */
+    flex-shrink: 0;
+}
+.filtros-card-perfil {
+    display: none;
+    position: absolute;
+    top: 48px;
+    right: 0;
+    width: 280px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.filtros-card-perfil.aberto {
+    display: flex;
+}
+
+/* Somente os checkboxes da página perfil */
+
+
+.filtros-card-perfil .checkbox-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filtros-card-perfil .checkbox-lista::-webkit-scrollbar {
+    width: 6px;
+}
+
+.filtros-card-perfil .checkbox-lista::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+.filtros-card-perfil .filtro-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filtros-card-perfil .filtro-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: 13px;
+    color: #1e3a5f;
+
+    cursor: pointer;
+    font-weight: 400;
+}
+
+.filtros-card-perfil .filtro-checkbox-label input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+
+    margin-right: 0;
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   GRID ESPECÍFICO DA PÁGINA PERFIL (3 COLUNAS)
+========================================================= */
+/* =========================================================
+   GRID ESPECÍFICO DA PÁGINA PERFIL (3 COLUNAS)
+========================================================= */
+.dashboard-grid-perfil {
+    display: grid;
+    grid-template-columns: 0.75fr 1.15fr 1fr; 
+    gap: 15px;
+    margin-top: -9px; /* Mantida a sua margem original */
+    width: 100%;
+}
+
+/* Remove o fundo e bordas da coluna pai */
+.painel-coluna {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    height: 100% !important;
+    gap: 0px; /* Cria o espaçamento padrão entre os blocos filhos */
+}
+
+/* Aplica o visual de card branco unificado com comportamento flexível vertical */
+.tabela-container-mini, 
+.grafico-container-pequeno, 
+.grafico-container-medio {
+    background-color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 15px 20px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid #e0e0e0 !important;
+    box-sizing: border-box !important;
+    
+    /* Faz o título h3 se isolar no topo e o gráfico ocupar o espaço de baixo */
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* Mantém as suas alturas originais para as caixas externas */
+.grafico-container-pequeno { height: 160px !important; }
+.grafico-container-medio   { height: 360px !important; }
+
+
+/* Estiliza os títulos internos dos cards brancos */
+.tabela-container-mini h3,
+.grafico-container-pequeno h3,
+.grafico-container-medio h3 {
+    margin-top: 0 !important;
+    margin-bottom: 10px !important;
+    font-size: 15px !important;
+    color: #333 !important;
+    text-align: center !important;
+    font-weight: 600 !important;
+}
+
+
+/* Atualize a classe de container das tabelas */
+.tabela-container-mini {
+    flex: 1 !important;         /* Faz a caixa esticar e ocupar 100% do tamanho restante da coluna */
+    width: 100% !important;
+    height: auto !important;     /* Libera a altura fixa de 190px para ela se adaptar perfeitamente */
+    min-height: 0 !important;
+    overflow: hidden !important; /* 🌟 REMOVE TOTALMENTE A ROLAGEM nos itens conforme solicitado */
+}
+
+/* Garante o comportamento limpo dentro dos seletores do DuckDB e Plotly */
+#tabelaEscola, #tabelaDepAdm, #tabelaConclusao,
+#graficoRaca, #graficoSexo, #graficoIdade {
+    flex: 1 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    overflow: hidden !important; /* 🌟 Bloqueia qualquer rolagem interna indesejada */
+}
+
+
+.painel-coluna h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+    font-weight: 600;
+}
+
+.painel-coluna-graficos {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+
+/* MANTIDO: Ajuste original */
+.grafico-container {
+    width: 100%;
+    height: 320px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+
+/* Garante que o Plotly e as tabelas ocupem o espaço restante do card perfeitamente */
+.tabela-mini, .tabela-estilo-painel, .js-plotly-plot {
+    flex: 1;
+    width: 100% !important;
+}
+
+.tabela-mini th, .tabela-mini td {
+    padding: 9px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+}
+
+.tabela-estilo-painel th, 
+.tabela-estilo-painel td {
+    padding: 8px 9px;  
+    font-size: 11px;    
+    border-bottom: 2px solid #ccc; 
+    text-align: left;
+}
+
+.tabela-estilo-painel th {
+    font-weight: bold;
+    border-bottom: 3px solid #999; 
+    position: sticky;
+    top: 0;
+    color: #333;
+}
+/* Força a área interna do gráfico de raça a expandir ao máximo */
+#graficoRaca {
+    height: 100% !important;
+    min-height: 110px !important; /* Garante uma altura mínima para as barras verticais respirarem */
+}
+
+
+/* Responsividade da Página Perfil */
+@media (max-width: 1200px) {
+    .dashboard-grid-perfil { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid-perfil { grid-template-columns: 1fr; }
+}
+

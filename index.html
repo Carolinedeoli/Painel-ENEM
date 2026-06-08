@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel ENEM</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <aside class="barra-lateral">
+        <div class="logo-painel">
+            <h2>Painel ENEM</h2>
+        </div>
+        <nav class="menu-navegacao">
+            <button class="btn-nav ativo" onclick="alterarPagina('geral')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                Estatísticas Gerais
+            </button>
+            <button class="btn-nav" onclick="alterarPagina('perfil')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                Perfil dos Participantes
+            </button>
+        </nav>
+    </aside>
+
+    <main class="conteudo-principal">
+
+        <div class="filtro-container-wrapper">
+            <button id="btnFiltros" class="btn-filtros-novo" onclick="toggleFiltros()">
+                <svg xmlns="http://www.w3.org/2000/svg" 
+                width="18" 
+                height="18" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                stroke-width="2"
+                stroke-linecap="round" 
+                stroke-linejoin="round">
+                <line  x1="4" y1="21" x2="4" y2="14"></line>
+                <line x1="4" y1="10" x2="4" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12" y2="3"></line>
+                <line x1="20" y1="21" x2="20" y2="16"></line>
+                <line x1="20" y1="12" x2="20" y2="3"></line>
+                <line x1="2" y1="14" x2="6" y2="14"></line>
+                <line x1="10" y1="8" x2="14" y2="8"></line>
+                <line x1="18" y1="16" x2="22" y2="16"></line>
+            </svg> 
+                Filtros
+            </button>
+
+            <div class="filtros-card" id="menuFiltros">
+                <button class="btn-limpar-filtros" onclick="limparFiltrosAtivos()">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                     width="14" height="14" viewBox="0 0 24 24" fill="none" 
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                    stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                    <line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                    Limpar Filtros
+                </button>
+
+                <div class="filtro-grupo">
+                    <label class="filtro-titulo">Ano</label>
+                    <div class="periodo-flex">
+                        <select id="filtroAno" class="filtro-select-ano"></select>
+                    </div>
+                </div>
+
+                <div class="filtro-grupo">
+                    <label class="filtro-titulo">UF</label>
+                    <div class="checkbox-lista" id="filtroUF"></div>
+                </div>
+
+                <div class="filtro-grupo">
+                    <label class="filtro-titulo">Escola</label>
+                    <div class="checkbox-lista" id="filtroEscola"></div>
+                </div>
+
+                <div class="filtro-grupo">
+                    <label class="filtro-titulo">Dependência</label>
+                    <div class="checkbox-lista" id="filtroDepAdm"></div>
+                </div>
+
+                <div class="filtro-grupo">
+                    <label class="filtro-titulo">Status Redação</label>
+                    <div class="checkbox-lista" id="filtroRedacao"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="pagina-geral" class="pagina-view">
+            <h1>Estatísticas Gerais</h1>
+
+            <div class="cards">
+                <div class="card">
+                    <h3>Inscritos</h3>
+                    <p id="totalInscritos">0</p>
+                </div>
+                <div class="card">
+                    <h3>Presentes<span class="info" title="Participantes presentes em ambos os dias.">ⓘ</span></h3>
+                    <p id="totalParticipantes">0</p>
+                </div>
+                <div class="card">
+                    <h3>% Presentes<span class="info" title="Porcentagem de participantes presentes em ambos os dias com relação ao total de inscritos.">ⓘ</span></h3>
+                    <p id="percentParticipacao">0%</p>
+                </div>
+                <div class="card">
+                    <h3>% Redações Válidas <span class="info" title="Percentual de redações válidas entre os presentes no primeiro dia.">ⓘ</span></h3>
+                    <p id="percentRedacoesValidas">0%</p>
+                </div>
+                <div class="card">
+                    <h3>Média Participantes por Ano</h3>
+                    <p id="mediaParticipantesAno">0</p>
+                    <small id="notaMediaAnos"></small>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="painel-esquerda">
+                    <div class="grafico-box">
+                        <h2>Evolução de Inscritos e Participantes</h2>
+                        <div id="graficoInscritos" class="grafico"></div>
+                    </div>
+                    <div class="grafico-box">
+                        <h2>Presença e Redações Válidas</h2>
+                        <div id="graficoPresenca" class="grafico"></div>
+                    </div>
+                </div>
+
+                <div class="painel-direita">
+                    <div class="tabela-container">
+                        <h2>Status da Redação</h2>
+                        <table id="tabelaRedacao">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Quantidade</th>
+                                    <th>% Inscritos</th>
+                                        </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- =========================================
+     PÁGINA PERFIL
+========================================= -->
+
+<div id="pagina-perfil"
+     class="pagina-view"
+     style="display: none;">
+
+    <!-- =========================================
+         FILTROS PERFIL
+    ========================================= -->
+
+<div class="filtro-container-wrapper-perfil">
+
+    <button id="btnFiltrosPerfil"
+            class="btn-filtros-novo"
+            onclick="toggleFiltrosPerfil()">
+
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="18"
+             height="18"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round">
+
+            <line x1="4" y1="21" x2="4" y2="14"></line>
+            <line x1="4" y1="10" x2="4" y2="3"></line>
+
+            <line x1="12" y1="21" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12" y2="3"></line>
+
+            <line x1="20" y1="21" x2="20" y2="16"></line>
+            <line x1="20" y1="12" x2="20" y2="3"></line>
+
+            <line x1="2" y1="14" x2="6" y2="14"></line>
+            <line x1="10" y1="8" x2="14" y2="8"></line>
+            <line x1="18" y1="16" x2="22" y2="16"></line>
+
+        </svg>
+
+        Filtros
+
+    </button>
+
+    <div class="filtros-card filtros-card-perfil"
+         id="menuFiltrosPerfil">
+
+        <button class="btn-limpar-filtros"
+                onclick="limparFiltrosPerfil()">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="14"
+                 height="14"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+
+                <circle cx="12" cy="12" r="10"></circle>
+
+                <line x1="15" y1="9"
+                      x2="9" y2="15"></line>
+
+                <line x1="9" y1="9"
+                      x2="15" y2="15"></line>
+
+            </svg>
+
+            Limpar Filtros
+
+        </button>
+
+            <!-- ANO -->
+
+            <div class="filtro-grupo">
+
+                <label  class="filtro-titulo">
+                    Ano
+                </label >
+
+                <select id="filtroAnoPerfil"
+                        class="filtro-select-ano">
+                </select>
+
+            </div>
+
+            <!-- UF -->
+
+            <div class="filtro-grupo">
+
+                <label  class="filtro-titulo">
+                    UF
+                </label >
+
+                <div id="filtroUFPerfil"
+                     class="checkbox-lista">
+                </div>
+
+            </div>
+
+            <!-- SEXO -->
+
+            <div class="filtro-grupo">
+
+                <label  class="filtro-titulo">
+                    Sexo
+                </label >
+
+                <div id="filtroSexoPerfil"
+                     class="checkbox-lista">
+                </div>
+
+            </div>
+
+            <!-- RAÇA -->
+
+            <div class="filtro-grupo">
+
+                <label   class="filtro-titulo">
+                    Cor/Raça
+                </label >
+
+                <div id="filtroRacaPerfil"
+                     class="checkbox-lista">
+                </div>
+
+            </div>
+
+             <!-- ESTADO CIVIL -->
+
+            <div class="filtro-grupo">
+
+                <label   class="filtro-titulo">
+                    Estado Civil
+                </label >
+
+                <div id="filtroEstadocivilPerfil"
+                     class="checkbox-lista">
+                </div>
+
+            </div>
+
+            <!-- FAIXA ETÁRIA -->
+
+            <div class="filtro-grupo">
+
+                <label  class="filtro-titulo">
+                    Faixa Etária
+                </label >
+
+                <div id="filtroFaixaPerfil"
+                     class="checkbox-lista">
+                </div>
+
+            </div>
+
+            <!-- CONCLUSÃO -->
+
+            <div class="filtro-grupo">
+
+                <label  class="filtro-titulo">
+                    Situação de Conclusão
+                </label >
+
+                <div id="filtroConclusaoPerfil"
+                     class="checkbox-lista">
+                </div>
+
+            </div>
+
+            <!-- ESCOLA -->
+
+            <div class="filtro-grupo">
+
+                <label  class="filtro-titulo">
+                    Tipo Escola
+                </label >
+
+                <div id="filtroEscolaPerfil"
+                     class="checkbox-lista">
+                </div>
+
+            </div>
+
+            <!-- DEP ADM -->
+
+            <div class="filtro-grupo">
+
+                <label class="filtro-titulo">
+                    Dependência Adm
+                </label>
+
+                <div id="filtroDepAdmPerfil"
+                     class="checkbox-lista">
+                </div>
+
+            </div>
+
+            <!-- TREINEIRO -->
+
+            <div class="filtro-grupo">
+
+                <label class="filtro-titulo">
+                    Treineiro
+                </label>
+
+                <div id="filtroTreineiroPerfil"
+                     class="checkbox-lista">
+                </div>
+
+            </div>
+
+            <!-- ESCOLARIDADE MÃE -->
+
+            <div class="filtro-grupo">
+
+                <label  class="filtro-titulo">
+                    Escolaridade Mãe
+                </label>
+
+                <div id="filtroMaePerfil"
+                     class="checkbox-lista">
+                </div>
+
+            </div>
+
+            <!-- RENDA -->
+
+            <div class="filtro-grupo">
+
+                <label class="filtro-titulo">
+                    Renda
+                </label>
+
+                <div id="filtroRendaPerfil"
+                     class="checkbox-lista">
+                </div>
+
+            </div>
+
+            <!-- INTERNET -->
+
+            <div class="filtro-grupo">
+
+                <label  class="filtro-titulo">
+                    Internet
+                </label >
+
+                <div id="filtroInternetPerfil"
+                     class="checkbox-lista">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =========================================
+         TÍTULO
+    ========================================= -->
+
+    <h1>
+        Perfil dos Participantes
+    </h1>
+
+    <!-- =========================================
+         CARDS
+    ========================================= -->
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Participantes<span class="info" title="Presentes com notas maiores que zero">ⓘ</span></h3>
+            <p id="cardParticipantesPerfil"></p>
+        </div>
+
+        <div class="card">
+            <h3>Último Ano</h3>
+            <p id="cardUltimoAnoPerfil"></p>
+        </div>
+
+        <div class="card">
+            <h3>Treineiros</h3>
+            <p id="cardTreineirosPerfil"></p>
+        </div>
+
+        <div class="card">
+            <h3>Faixa Etária Mais Comum</h3>
+            <p id="cardIdadePerfil"></p>
+        </div>
+        
+<div class="dashboard-grid-perfil">
+    
+    <div class="painel-coluna">
+        <div class="tabela-container-mini">
+            <h3>Distribuição por Escola</h3>
+            <div id="tabelaEscola"></div>
+        </div>
+        
+        <div class="tabela-container-mini" style="margin-top: 20px;">
+            <h3>Distribuição por Dependência</h3>
+            <div id="tabelaDepAdm"></div>
+        </div>
+    </div>
+
+    <div class="painel-coluna">
+        <div class="grafico-container-pequeno">
+            <h3>Cor/Raça</h3>
+            <div id="graficoRaca"></div>
+        </div>
+        
+        <div class="tabela-container-mini" style="margin-top: 20px;">
+            <h3>Situação de Conclusão</h3>
+            <div id="tabelaConclusao"></div>
+        </div>
+    </div>
+
+    <div class="painel-coluna">
+        <div class="grafico-container-pequeno">
+            <h3>Proporção por Sexo</h3>
+            <div id="graficoSexo"></div>
+        </div>
+        
+        <div class="grafico-container-medio" style="margin-top: 20px;">
+            <h3>Faixa Etária</h3>
+            <div id="graficoIdade"></div>
+        </div>
+    </div>
+          
+</div>
+
+</div></main>
+
+  
+
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+<script src="js/filtros.js"></script>
+<script src="js/cards.js"></script>
+<script src="js/graficos.js"></script>
+<script src="js/tabelas.js"></script>
+
+
+
+<script type="module" src="js/perfil.js"></script>
+
+<script src="script.js"></script>
+
+</body>
+</html>
