@@ -143,116 +143,45 @@ function atualizarPainel(){
 
 function alterarPagina(idPagina) {
 
-    // =========================================
-    // OCULTA PÁGINAS
-    // =========================================
-
-    document.getElementById(
-        'pagina-geral'
-    ).style.display = 'none';
-
-    document.getElementById(
-        'pagina-perfil'
-    ).style.display = 'none';
-
-    // =========================================
-    // OCULTA FILTROS
-    // =========================================
-
-    const filtroGeral =
-        document.querySelector(
-            '.filtro-container-wrapper'
-        );
-
-    const filtroPerfil =
-        document.querySelector(
-            '.filtro-container-wrapper-perfil'
-        );
-
-    if(filtroGeral){
-
-        filtroGeral.style.display = 'none';
-
-    }
-
-    if(filtroPerfil){
-
-        filtroPerfil.style.display = 'none';
-
-    }
-
-    // =========================================
-    // REMOVE BOTÃO ATIVO
-    // =========================================
-
-    const botoes =
-        document.querySelectorAll(
-            '.btn-nav'
-        );
-
-    botoes.forEach(btn => {
-
-        btn.classList.remove('ativo');
-
+    // 1. OCULTA TODAS AS PÁGINAS
+    document.querySelectorAll('.pagina-view').forEach(pagina => {
+        pagina.style.display = 'none';
     });
 
-    // =========================================
-    // MOSTRA PÁGINA
-    // =========================================
+    // 2. OCULTA TODOS OS FILTROS FLUTUANTES
+    const filtroGeral = document.querySelector('.filtro-container-wrapper');
+    const filtroPerfil = document.querySelector('.filtro-container-wrapper-perfil');
+    const filtroRedacao = document.querySelector('.filtro-container-wrapper-redacao');
 
-    document.getElementById(
-        'pagina-' + idPagina
-    ).style.display = 'flex';
+    if(filtroGeral) filtroGeral.style.display = 'none';
+    if(filtroPerfil) filtroPerfil.style.display = 'none';
+    if(filtroRedacao) filtroRedacao.style.display = 'none';
 
-    // =========================================
-    // MOSTRA FILTRO CORRETO
-    // =========================================
+    // 3. REMOVE A COR BRANCA DE TODOS OS BOTÕES DO MENU
+    document.querySelectorAll('.btn-nav').forEach(btn => {
+        btn.classList.remove('ativo');
+    });
 
-    if(idPagina === 'geral'){
-
-        if(filtroGeral){
-
-            filtroGeral.style.display =
-                'inline-block';
-
-        }
-
+    // 4. MOSTRA APENAS A PÁGINA CLICADA
+    const divPagina = document.getElementById('pagina-' + idPagina);
+    if(divPagina) {
+        divPagina.style.display = 'flex';
     }
 
-    if(idPagina === 'perfil'){
+    // 5. MOSTRA O FILTRO CORRETO DAQUELA PÁGINA
+    if(idPagina === 'geral' && filtroGeral) filtroGeral.style.display = 'inline-block';
+    if(idPagina === 'perfil' && filtroPerfil) filtroPerfil.style.display = 'inline-block';
+    if(idPagina === 'redacao' && filtroRedacao) filtroRedacao.style.display = 'inline-block';
 
-        if(filtroPerfil){
-
-            filtroPerfil.style.display =
-                'inline-block';
-
-        }
-
+    // 6. MARCA O BOTÃO CLICADO COMO ATIVO (Corrigido para não usar 'event')
+    const btnAtivo = document.querySelector(`.btn-nav[onclick="alterarPagina('${idPagina}')"]`);
+    if (btnAtivo) {
+        btnAtivo.classList.add('ativo');
     }
 
-    // =========================================
-    // BOTÃO ATIVO
-    // =========================================
-
-    if(event && event.currentTarget){
-
-        event.currentTarget.classList.add(
-            'ativo'
-        );
-
-    }
-
-    // =========================================
-    // RESIZE PLOTLY
-    // =========================================
-
+    // 7. ACORDA OS GRÁFICOS DO PLOTLY PARA ELES APARECEREM
     setTimeout(() => {
-
-        window.dispatchEvent(
-            new Event('resize')
-        );
-
+        window.dispatchEvent(new Event('resize'));
     }, 100);
-
 }
 
