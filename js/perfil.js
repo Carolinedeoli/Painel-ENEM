@@ -246,4 +246,3 @@ window.limparFiltrosPerfil = async function() {
 };
 
 iniciarPerfil();
-
