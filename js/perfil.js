@@ -40,9 +40,24 @@ async function iniciarPerfil() {
         URL.revokeObjectURL(workerUrl);
         
     
+<<<<<<< Updated upstream
         conn = await db.connect()
         // Isso garante que funcione tanto no computador quanto no GitHub Pages
         const urlBaseDoSite = window.location.origin + window.location.pathname;
+=======
+        conn = await db.connect();
+        
+        
+        let pathname = window.location.pathname;
+        if (pathname.includes('index.html')) {
+            pathname = pathname.replace('index.html', '');
+        }
+        
+        if (!pathname.endsWith('/')) {
+            pathname += '/';
+        }
+        const urlBaseDoSite = window.location.origin + pathname;
+>>>>>>> Stashed changes
 
         // Registra os arquivos Parquet com o caminho adaptável corrigido
         await db.registerFileURL('ENEM_2019.parquet', `${urlBaseDoSite}dados/ENEM_2019.txt`, duckdb.DuckDBDataProtocol.HTTP, false);
@@ -68,7 +83,7 @@ async function iniciarPerfil() {
 function preencherSelectAnoRealPerfil() {
     const selectAno = document.getElementById("filtroAnoPerfil");
     if (selectAno && selectAno.options.length === 0) {
-        // Adicionadas as opções para os anos de 2019, 2020 e 2021
+        
         selectAno.innerHTML = `
             <option value="2019">2019</option>
             <option value="2020">2020</option>
@@ -129,7 +144,11 @@ function configurarEventosMudanca() {
         filtrarEAtualizarPainelPerfil();
     });
 
+<<<<<<< Updated upstream
     // Escuta de forma correta e direta a ID mapeada no HTML
+=======
+    
+>>>>>>> Stashed changes
     const menuFiltros = document.getElementById("menuFiltrosPerfil");
     menuFiltros?.addEventListener("change", (e) => {
         if (e.target && e.target.type === "checkbox") {
@@ -230,7 +249,7 @@ window.limparFiltrosPerfil = async function() {
         selectAno.value = "2023";
     }
 
-    // 2. CORREÇÃO: Desmarca todos os checkboxes buscando pela classe estrutural do container
+    // 2. Desmarca todos os checkboxes buscando pela classe estrutural do container
     const containerFiltros = document.querySelector(".filtros-card-perfil") || document.getElementById("menuFiltrosPerfil");
     if (containerFiltros) {
         containerFiltros.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
