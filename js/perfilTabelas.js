@@ -1,5 +1,5 @@
 export function renderizarTabelasInterface(escola, dep, conclusao, labels) {
-    // Garante que o objeto existirá para não dar erro de undefined
+    
     const lb = labels || {};
     const lbEscola = lb.ESCOLA || window.LABELS_ESCOLA || {};
     const lbDep = lb.DEP_ADM || window.LABELS_DEP_ADM || {};

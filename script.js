@@ -130,7 +130,6 @@ function atualizarPainel(){
         return bateAno && bateUF && bateEscola && bateDep  && bateRed;
     });
 
-    // Executa a renderização dos componentes visuais com os dados estruturados
     atualizarCards(dadosFiltradosGeral, dadosParaMedia);
     atualizarTabelaRedacao(dadosFiltradosRedacao);
     atualizarGraficoInscritos(dadosParaMedia);
@@ -143,12 +142,12 @@ function atualizarPainel(){
 
 function alterarPagina(idPagina) {
 
-    // 1. OCULTA TODAS AS PÁGINAS
+    // OCULTA TODAS AS PÁGINAS
     document.querySelectorAll('.pagina-view').forEach(pagina => {
         pagina.style.display = 'none';
     });
 
-    // 2. OCULTA TODOS OS FILTROS FLUTUANTES
+    //  OCULTA TODOS OS FILTROS FLUTUANTES
     const filtroGeral = document.querySelector('.filtro-container-wrapper');
     const filtroPerfil = document.querySelector('.filtro-container-wrapper-perfil');
     const filtroRedacao = document.querySelector('.filtro-container-wrapper-redacao');
@@ -157,29 +156,29 @@ function alterarPagina(idPagina) {
     if(filtroPerfil) filtroPerfil.style.display = 'none';
     if(filtroRedacao) filtroRedacao.style.display = 'none';
 
-    // 3. REMOVE A COR BRANCA DE TODOS OS BOTÕES DO MENU
+    
     document.querySelectorAll('.btn-nav').forEach(btn => {
         btn.classList.remove('ativo');
     });
 
-    // 4. MOSTRA APENAS A PÁGINA CLICADA
+    //  MOSTRA APENAS A PÁGINA CLICADA
     const divPagina = document.getElementById('pagina-' + idPagina);
     if(divPagina) {
         divPagina.style.display = 'flex';
     }
 
-    // 5. MOSTRA O FILTRO CORRETO DAQUELA PÁGINA
+    //  MOSTRA O FILTRO CORRETO DAQUELA PÁGINA
     if(idPagina === 'geral' && filtroGeral) filtroGeral.style.display = 'inline-block';
     if(idPagina === 'perfil' && filtroPerfil) filtroPerfil.style.display = 'inline-block';
     if(idPagina === 'redacao' && filtroRedacao) filtroRedacao.style.display = 'inline-block';
 
-    // 6. MARCA O BOTÃO CLICADO COMO ATIVO (Corrigido para não usar 'event')
+    
     const btnAtivo = document.querySelector(`.btn-nav[onclick="alterarPagina('${idPagina}')"]`);
     if (btnAtivo) {
         btnAtivo.classList.add('ativo');
     }
 
-    // 7. ACORDA OS GRÁFICOS DO PLOTLY PARA ELES APARECEREM
+    
     setTimeout(() => {
         window.dispatchEvent(new Event('resize'));
     }, 100);

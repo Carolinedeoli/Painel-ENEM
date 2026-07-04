@@ -344,7 +344,7 @@ function renderizarTabelasInterface(escola, dep, conclusao, labels) {
             let valorBruto = String(l[col]);
             let nome = labelMap ? (labelMap[valorBruto] || l[col]) : l[col];
             
-            // 🌟 CORREÇÃO: Substitui o "NA" por "Não Informado" para a tabela de dependência administrativa
+            // CORREÇÃO: Substitui o "NA" por "Não Informado" para a tabela de dependência administrativa
             if (valorBruto === "NA" || nome === "NA") {
                 nome = "Não Informado";
             }

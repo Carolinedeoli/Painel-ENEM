@@ -1,7 +1,7 @@
 // perfilCards.js
 
 function atualizarCardsPerfil(dadosFiltrados) {
-    // 🌟 MUDANÇA CRUCIAL: Em vez de dadosFiltrados.length, nós somamos a coluna TOTAL_PEOPLE
+    
     const totalInscritosFiltrados = dadosFiltrados.reduce((soma, linha) => soma + (linha.TOTAL_PEOPLE || 0), 0);
 
     // Atualiza o card principal de total de alunos na tela

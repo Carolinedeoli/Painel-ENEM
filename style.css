@@ -1,5 +1,5 @@
 /* =========================================
-   BARRA LATERAL E REESTRUTURAÇÃO DO LAYOUT
+   BARRA LATERAL LAYOUT
 ========================================= */
 
 body {
@@ -45,7 +45,7 @@ body {
     padding: 20px 12px;
 }
 
-/* Botões Modernos e Delicados da Sidebar */
+/* Botões Sidebar */
 .btn-nav {
     background: transparent;
     color: #94a3b8; 
@@ -386,9 +386,9 @@ h2 {
     margin-bottom: 20px;      
 }
 
-/* =========================================================
+/* ===========================================================================================
    GRID ESPECÍFICO DAS PÁGINAS PERFIL E REDAÇÃO (3 COLUNAS)
-========================================================= */
+========================================================================================== */
 
 .dashboard-grid-perfil {
     display: grid !important;
@@ -408,7 +408,7 @@ h2 {
     flex-direction: column;
     height: 100% !important;
     gap: 0px; 
-    min-width: 0 !important; /* 🌟 TRAVA 1: Impede a coluna de vazar da tela */
+    min-width: 0 !important; /*TRAVA 1: Impede a coluna de vazar da tela */
 }
 
 .tabela-container-mini, 
@@ -422,7 +422,7 @@ h2 {
     box-sizing: border-box !important;
     display: flex !important;
     flex-direction: column !important;
-    min-width: 0 !important; /* 🌟 TRAVA 2: Impede o gráfico de vazar da caixa */
+    min-width: 0 !important; /* TRAVA 2: Impede o gráfico de vazar da caixa */
 }
 
 .grafico-container-pequeno { height: 160px !important; }
@@ -437,7 +437,7 @@ h2 {
     color: #333 !important;
     text-align: center !important;
     font-weight: 600 !important;
-    flex-shrink: 0 !important; /* 🌟 TRAVA 3: Impede o gráfico de engolir os títulos */
+    flex-shrink: 0 !important; /* TRAVA 3: Impede o gráfico de engolir os títulos */
 }
 
 .tabela-container-mini {

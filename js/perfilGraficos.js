@@ -8,7 +8,7 @@ export function renderizarGraficosInterface(raca, sexo, idade, labels) {
     const containerRaca = document.getElementById('graficoRaca');
     if (containerRaca) {
         const traceRaca = [{
-            // 🌟 A MAGIA AQUI: O .replace(" ", "<br>") faz o "Não Informado" virar "Não<br>Informado" apenas para o Plotly
+            // O .replace(" ", "<br>") faz o "Não Informado" virar "Não<br>Informado" apenas para o Plotly
             x: raca.map(r => {
                 const nomeCompleto = lbRaca[String(r.TP_COR_RACA)] || r.TP_COR_RACA;
                 return nomeCompleto === "Não Informado" ? "Não<br>Informado" : nomeCompleto;
@@ -60,10 +60,6 @@ if (containerIdade) {
         height: 340, 
         bargap: 0.4, 
         
-        // 🌟 REMOVIDO: O objeto title foi totalmente retirado já que você usa o h3 do HTML.
-        
-        // 🌟 AJUSTADO: Mudamos 't' de 30 para 0 para eliminar o vácuo de cima.
-        // Aumentamos o 'b' para 40/50 caso precise de espaço para os números do eixo X (ex: 200k, 400k).
         margin: { t: 0, b: 40, l: 110, r: 20 }, 
         
         yaxis: { 

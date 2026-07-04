@@ -47,7 +47,7 @@ function atualizarGraficoInscritos(base){
 
     height: 180,
 
-    // 🌟 ADICIONADO: Ativa o hover unificado no eixo X e estiliza o card
+    
     hovermode: 'x unified',
     hoverlabel: {
         bgcolor: '#ffffff',
@@ -156,7 +156,7 @@ function atualizarGraficoPresenca(base){
 
     height: 180,
 
-    // 🌟 ADICIONADO: Ativa o hover unificado no eixo X e estiliza o card
+    
     hovermode: 'x unified',
     hoverlabel: {
         bgcolor: '#ffffff',

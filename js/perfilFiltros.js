@@ -8,14 +8,14 @@ function aplicarFiltrosPerfil() {
     const estadosSelecionados = obterCheckboxesMarcados('filtro_estado');
     const sexosSelecionados = obterCheckboxesMarcados('filtro_sexo');
     const escolasSelecionadas = obterCheckboxesMarcados('filtro_escola');
-    // ... adicione os outros filtros do seu painel aqui
+    // ... adicionar os outros filtros do painel aqui
 
     // 3. Filtra a base DIM_PERFIL_UNICO na memória
     const dadosFiltrados = dadosPerfilGeral.filter(linha => {
-        // Filtro obrigatório de ANO (Crucial para separar 2022 de 2023)
+        
         if (linha.ANO != anoSelecionado) return false;
 
-        // Filtros dinâmicos (se houver algo marcado, filtra; se não, passa tudo)
+        // Filtros dinâmicos 
         if (estadosSelecionados.length > 0 && !estadosSelecionados.includes(linha.estado_prova)) return false;
         if (sexosSelecionados.length > 0 && !sexosSelecionados.includes(linha.TP_SEXO)) return false;
         if (escolasSelecionadas.length > 0 && !escolasSelecionadas.includes(linha.tipo_escola)) return false;
