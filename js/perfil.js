@@ -40,10 +40,8 @@ async function iniciarPerfil() {
         URL.revokeObjectURL(workerUrl);
         
     
-        conn = await db.connect();
-        
-        // 🌟 CORREÇÃO PARA A NUVEM: Descobre o caminho exato da pasta atual
-        // Isso garante que funcione tanto no seu computador quanto no GitHub Pages
+        conn = await db.connect()
+        // Isso garante que funcione tanto no computador quanto no GitHub Pages
         const urlBaseDoSite = window.location.origin + window.location.pathname;
 
         // Registra os arquivos Parquet com o caminho adaptável corrigido
@@ -131,7 +129,7 @@ function configurarEventosMudanca() {
         filtrarEAtualizarPainelPerfil();
     });
 
-    // Escuta de forma correta e direta a ID mapeada no seu HTML
+    // Escuta de forma correta e direta a ID mapeada no HTML
     const menuFiltros = document.getElementById("menuFiltrosPerfil");
     menuFiltros?.addEventListener("change", (e) => {
         if (e.target && e.target.type === "checkbox") {
