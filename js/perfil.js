@@ -39,14 +39,7 @@ async function iniciarPerfil() {
         await db.instantiate(bundle.mainModule, bundle.pthreadModule);
         URL.revokeObjectURL(workerUrl);
         
-    
-<<<<<<< Updated upstream
-        conn = await db.connect()
-        // Isso garante que funcione tanto no computador quanto no GitHub Pages
-        const urlBaseDoSite = window.location.origin + window.location.pathname;
-=======
         conn = await db.connect();
-        
         
         let pathname = window.location.pathname;
         if (pathname.includes('index.html')) {
@@ -57,16 +50,15 @@ async function iniciarPerfil() {
             pathname += '/';
         }
         const urlBaseDoSite = window.location.origin + pathname;
->>>>>>> Stashed changes
 
-        // Registra os arquivos Parquet com o caminho adaptável corrigido
-        await db.registerFileURL('ENEM_2019.parquet', `${urlBaseDoSite}dados/ENEM_2019.txt`, duckdb.DuckDBDataProtocol.HTTP, false);
-        await db.registerFileURL('ENEM_2020.parquet', `${urlBaseDoSite}dados/ENEM_2020.txt`, duckdb.DuckDBDataProtocol.HTTP, false);        
-        await db.registerFileURL('ENEM_2021.parquet', `${urlBaseDoSite}dados/ENEM_2021.txt`, duckdb.DuckDBDataProtocol.HTTP, false);
-        await db.registerFileURL('ENEM_2022.parquet', `${urlBaseDoSite}dados/ENEM_2022.txt`, duckdb.DuckDBDataProtocol.HTTP, false);
-        await db.registerFileURL('ENEM_2023.parquet', `${urlBaseDoSite}dados/ENEM_2023.txt`, duckdb.DuckDBDataProtocol.HTTP, false);
+        // Registra os arquivos Parquet reais diretamente
+        await db.registerFileURL('ENEM_2019.parquet', `${urlBaseDoSite}dados/ENEM_2019.parquet`, duckdb.DuckDBDataProtocol.HTTP, false);
+        await db.registerFileURL('ENEM_2020.parquet', `${urlBaseDoSite}dados/ENEM_2020.parquet`, duckdb.DuckDBDataProtocol.HTTP, false);        
+        await db.registerFileURL('ENEM_2021.parquet', `${urlBaseDoSite}dados/ENEM_2021.parquet`, duckdb.DuckDBDataProtocol.HTTP, false);
+        await db.registerFileURL('ENEM_2022.parquet', `${urlBaseDoSite}dados/ENEM_2022.parquet`, duckdb.DuckDBDataProtocol.HTTP, false);
+        await db.registerFileURL('ENEM_2023.parquet', `${urlBaseDoSite}dados/ENEM_2023.parquet`, duckdb.DuckDBDataProtocol.HTTP, false);
+
         preencherSelectAnoRealPerfil();
-        
         
         await carregarEstruturaFiltrosComponentes("2023");
         configurarEventosMudanca();
@@ -83,7 +75,6 @@ async function iniciarPerfil() {
 function preencherSelectAnoRealPerfil() {
     const selectAno = document.getElementById("filtroAnoPerfil");
     if (selectAno && selectAno.options.length === 0) {
-        
         selectAno.innerHTML = `
             <option value="2019">2019</option>
             <option value="2020">2020</option>
@@ -144,11 +135,6 @@ function configurarEventosMudanca() {
         filtrarEAtualizarPainelPerfil();
     });
 
-<<<<<<< Updated upstream
-    // Escuta de forma correta e direta a ID mapeada no HTML
-=======
-    
->>>>>>> Stashed changes
     const menuFiltros = document.getElementById("menuFiltrosPerfil");
     menuFiltros?.addEventListener("change", (e) => {
         if (e.target && e.target.type === "checkbox") {
@@ -156,7 +142,6 @@ function configurarEventosMudanca() {
         }
     });
 }
-
 
 /* =========================================================================
    3. PROCESSAMENTO SQL (APENAS CONSULTAS)
@@ -173,7 +158,6 @@ async function filtrarEAtualizarPainelPerfil() {
         const col = cb.getAttribute("data-coluna");
         if (!filtrosAtivos[col]) filtrosAtivos[col] = [];
         
-        // CORREÇÃO CRÍTICA DE TIPAGEM: Se for número, entra puro. Se for texto (como sexo 'M'), entra com aspas.
         const valor = cb.value;
         if (!isNaN(valor) && valor.trim() !== "") {
             filtrosAtivos[col].push(Number(valor));
@@ -205,6 +189,7 @@ async function filtrarEAtualizarPainelPerfil() {
     const qRaca = await conn.query(`SELECT TP_COR_RACA, COUNT(*) as qtd FROM '${tabelaAlvo}' ${sqlWhere} GROUP BY TP_COR_RACA`);
     const qSexo = await conn.query(`SELECT TP_SEXO, COUNT(*) as qtd FROM '${tabelaAlvo}' ${sqlWhere} GROUP BY TP_SEXO`);
     const qIdade = await conn.query(`SELECT TP_FAIXA_ETARIA, COUNT(*) as qtd FROM '${tabelaAlvo}' ${sqlWhere} GROUP BY TP_FAIXA_ETARIA ORDER BY CAST(TP_FAIXA_ETARIA AS INTEGER)`);
+    
     renderizarCardsInterface(dadosCards);
     
     if (typeof renderizarTabelasInterface === "function") {
@@ -229,13 +214,12 @@ function renderizarCardsInterface(dados) {
     document.getElementById("cardIdadePerfil").innerText = LABELS_FAIXA_ETARIA[faixaCodigo] || faixaCodigo;
 }
 
-// Expõe os dicionários globalmente para que os outros arquivos consigam ler as legendas (Labels)
+// Expõe os dicionários globalmente
 window.LABELS_ESCOLA = LABELS_ESCOLA;
 window.LABELS_DEP_ADM = LABELS_DEP_ADM;
 window.LABELS_CONCLUSAO = LABELS_CONCLUSAO;
 window.LABELS_COR_RACA = LABELS_COR_RACA;
 window.LABELS_FAIXA_ETARIA = LABELS_FAIXA_ETARIA;
-
 
 window.toggleFiltrosPerfil = function() {
     const menu = document.getElementById("menuFiltrosPerfil");
@@ -243,22 +227,17 @@ window.toggleFiltrosPerfil = function() {
 };
 
 window.limparFiltrosPerfil = async function() {
-    // 1. Reseta o seletor de ano no HTML para o ano padrão (2023)
     const selectAno = document.getElementById("filtroAnoPerfil");
     if (selectAno) {
         selectAno.value = "2023";
     }
 
-    // 2. Desmarca todos os checkboxes buscando pela classe estrutural do container
     const containerFiltros = document.querySelector(".filtros-card-perfil") || document.getElementById("menuFiltrosPerfil");
     if (containerFiltros) {
         containerFiltros.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
     }
     
-    // 3. Força os checkboxes a se redesenharem baseados na estrutura de dados de 2023
     await carregarEstruturaFiltrosComponentes("2023");
-
-    // 4. Executa a query SQL limpa no DuckDB para atualizar os gráficos e cards
     filtrarEAtualizarPainelPerfil();
 };
 

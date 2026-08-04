@@ -28,6 +28,10 @@
                 Perfil dos Participantes
             </button>
              
+            <button class="btn-nav" onclick="alterarPagina('desempenho')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                Desempenho
+            </button>
         </nav>
     </aside>
 
@@ -847,25 +851,403 @@
 
 </div></main>
 
-  
+<!-- =========================================
+     PÁGINA DESEMPENHO
+========================================= -->
+ 
+<div id="pagina-desempenho"
+     class="pagina-view"
+     style="display: none;">
+ 
+    <!-- =========================================
+         FILTROS DESEMPENHO
+    ========================================= -->
+ 
+<div class="filtro-container-wrapper-desempenho">
+ 
+    <button id="btnFiltrosDesempenho"
+            class="btn-filtros-novo"
+            onclick="toggleFiltrosDesempenho()">
+ 
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="18"
+             height="18"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round">
+ 
+            <line x1="4" y1="21" x2="4" y2="14"></line>
+            <line x1="4" y1="10" x2="4" y2="3"></line>
+ 
+            <line x1="12" y1="21" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12" y2="3"></line>
+ 
+            <line x1="20" y1="21" x2="20" y2="16"></line>
+            <line x1="20" y1="12" x2="20" y2="3"></line>
+ 
+            <line x1="2" y1="14" x2="6" y2="14"></line>
+            <line x1="10" y1="8" x2="14" y2="8"></line>
+            <line x1="18" y1="16" x2="22" y2="16"></line>
+ 
+        </svg>
+ 
+        Filtros
+ 
+    </button>
+ 
+    <div class="filtros-card filtros-card-desempenho"
+         id="menuFiltrosDesempenho">
+ 
+        <button class="btn-limpar-filtros"
+                onclick="limparFiltrosDesempenho()">
+ 
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="14"
+                 height="14"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+ 
+                <circle cx="12" cy="12" r="10"></circle>
+ 
+                <line x1="15" y1="9"
+                      x2="9" y2="15"></line>
+ 
+                <line x1="9" y1="9"
+                      x2="15" y2="15"></line>
+ 
+            </svg>
+ 
+            Limpar Filtros
+ 
+        </button>
+ 
+        <!-- ÁREA DE CONHECIMENTO -->
+            <div class="filtro-grupo">
+                <label class="filtro-titulo">Área de Conhecimento</label>
+                <select id="filtroAreaDesempenho" class="filtro-select">
+                    <option value="GERAL" selected>Média Geral (5 Áreas)</option>
+                    <option value="NU_NOTA_CN">Ciências da Natureza</option>
+                    <option value="NU_NOTA_CH">Ciências Humanas</option>
+                    <option value="NU_NOTA_LC">Linguagens e Códigos</option>
+                    <option value="NU_NOTA_MT">Matemática</option>
+                    <option value="NU_NOTA_REDACAO">Redação</option>
+                </select>
+            </div>
 
+            <!-- ANO -->
+ 
+            <div class="filtro-grupo">
+ 
+                <label  class="filtro-titulo">
+                    Ano
+                </label >
+ 
+                <select id="filtroAnoDesempenho"
+                        class="filtro-select-ano">
+                </select>
+ 
+            </div>
+ 
+            <!-- UF -->
+ 
+            <div class="filtro-grupo">
+ 
+                <label  class="filtro-titulo">
+                    UF
+                </label >
+ 
+                <div id="filtroUFDesempenho"
+                     class="checkbox-lista">
+                </div>
+ 
+            </div>
+ 
+            <!-- SEXO -->
+ 
+            <div class="filtro-grupo">
+ 
+                <label  class="filtro-titulo">
+                    Sexo
+                </label >
+ 
+                <div id="filtroSexoDesempenho"
+                     class="checkbox-lista">
+                </div>
+ 
+            </div>
+ 
+            <!-- RAÇA -->
+ 
+            <div class="filtro-grupo">
+ 
+                <label   class="filtro-titulo">
+                    Cor/Raça
+                </label >
+ 
+                <div id="filtroRacaDesempenho"
+                     class="checkbox-lista">
+                </div>
+ 
+            </div>
+ 
+             <!-- ESTADO CIVIL -->
+ 
+            <div class="filtro-grupo">
+ 
+                <label   class="filtro-titulo">
+                    Estado Civil
+                </label >
+ 
+                <div id="filtroEstadocivilDesempenho"
+                     class="checkbox-lista">
+                </div>
+ 
+            </div>
+ 
+            <!-- FAIXA ETÁRIA -->
+ 
+            <div class="filtro-grupo">
+ 
+                <label  class="filtro-titulo">
+                    Faixa Etária
+                </label >
+ 
+                <div id="filtroFaixaDesempenho"
+                     class="checkbox-lista">
+                </div>
+ 
+            </div>
+ 
+            <!-- CONCLUSÃO -->
+ 
+            <div class="filtro-grupo">
+ 
+                <label  class="filtro-titulo">
+                    Situação de Conclusão
+                </label >
+ 
+                <div id="filtroConclusaoDesempenho"
+                     class="checkbox-lista">
+                </div>
+ 
+            </div>
+ 
+            <!-- ESCOLA -->
+ 
+            <div class="filtro-grupo">
+ 
+                <label  class="filtro-titulo">
+                    Tipo Escola
+                </label >
+ 
+                <div id="filtroEscolaDesempenho"
+                     class="checkbox-lista">
+                </div>
+ 
+            </div>
+ 
+            <!-- DEP ADM -->
+ 
+            <div class="filtro-grupo">
+ 
+                <label class="filtro-titulo">
+                    Dependência Adm
+                </label>
+ 
+                <div id="filtroDepAdmDesempenho"
+                     class="checkbox-lista">
+                </div>
+ 
+            </div>
+ 
+            <!-- TREINEIRO -->
+ 
+            <div class="filtro-grupo">
+ 
+                <label class="filtro-titulo">
+                    Treineiro
+                </label>
+ 
+                <div id="filtroTreineiroDesempenho"
+                     class="checkbox-lista">
+                </div>
+ 
+            </div>
+ 
+            <!-- ESCOLARIDADE MÃE -->
+ 
+            <div class="filtro-grupo">
+ 
+                <label  class="filtro-titulo">
+                    Escolaridade Mãe
+                </label>
+ 
+                <div id="filtroMaeDesempenho"
+                     class="checkbox-lista">
+                </div>
+ 
+            </div>
+ 
+            <!-- RENDA -->
+ 
+            <div class="filtro-grupo">
+ 
+                <label class="filtro-titulo">
+                    Renda
+                </label>
+ 
+                <div id="filtroRendaDesempenho"
+                     class="checkbox-lista">
+                </div>
+ 
+            </div>
+ 
+            <!-- INTERNET -->
+ 
+            <div class="filtro-grupo">
+ 
+                <label  class="filtro-titulo">
+                    Internet
+                </label >
+ 
+                <div id="filtroInternetDesempenho"
+                     class="checkbox-lista">
+                </div>
+ 
+            </div>
+ 
+        </div>
+ 
+    </div>
+ 
+    <!-- =========================================
+         TÍTULO
+    ========================================= -->
+ 
+    <h1>
+        Desempenho
+    </h1>
+ 
+ <!-- =========================================
+         GRADE PRINCIPAL
+    ========================================= -->
+
+    <div class="dashboard-grid-perfil">
+
+        <!-- =========================================
+             COLUNA 1: ESQUERDA
+        ========================================= -->
+        <div class="painel-coluna">
+            <!-- 2 Cards Numéricos em Dupla (Lado a Lado) -->
+            <div class="cards-dupla-desempenho">
+                <div class="card">
+                    <h3>Redações 1000</h3>
+                    <p id="cardRedacoes1000Desempenho">0</p>
+                </div>
+                <div class="card">
+                    <h3>% Proficiência<span class="info" title="Porcentagem dos participantes com nota >= 450 em cada uma das 4 áreas e nota >= 500 na redação, simultaneamente.">ⓘ</span></h3>
+                    <p id="cardProficienciaDesempenho">0%</p>
+                </div>
+            </div>
+
+            <!-- Gráfico Curva de Densidade -->
+            <div class="grafico-container-pequeno" style="margin-top: 10px;">
+                <h3>Curva de Densidade do Desempenho</h3>
+                <div id="graficoDensidadeDesempenho"></div>
+            </div>
+
+        
+           <!-- Tabela Redações 1000 por Estado (Multi-coluna) -->
+            <div class="tabela-container-mini" style="margin-top: 10px;">
+                <h3>Redações Nota 1000 por Estado</h3>
+                <table id="tabelaEstadosRedacoes1000Desempenho" class="tabela-mini">
+                    <thead>
+                        <tr>
+                            <th>UF</th>
+                            <th>Nº</th>
+                            <th>UF</th>
+                            <th>Nº</th>
+                            <th>UF</th>
+                            <th>Nº</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+    </div>
+        <!-- =========================================
+             COLUNA 2: MEIO
+        ========================================= -->
+        <div class="painel-coluna">
+            <!-- Tabela de Média por Área -->
+            <div class="tabela-container-mini card-tabela-media">
+                <h3>Média por Área da Prova</h3>
+                <div id="tabelaMediaAreasDesempenho"></div>
+            </div>
+
+            <!-- Gráfico Densidade por Dependência -->
+            <div class="grafico-container-pequeno" style="margin-top: 10px;">
+                <h3>Densidade por Dep. Administrativa</h3>
+                <div id="graficoDensidadeDepAdmDesempenho"></div>
+            </div>
+
+            <!-- Gráfico Nota Média por Ano -->
+            <div class="grafico-container-pequeno" style="margin-top: 10px;">
+                <h3>Nota Média por Área e Ano</h3>
+                <div id="graficoNotaMediaAnoDesempenho"></div>
+            </div>
+        </div>
+
+        <!-- =========================================
+             COLUNA 3: DIREITA (INTEIRA COM A TABELA)
+        ========================================= -->
+        <div class="painel-coluna">
+            <div class="tabela-container-mini" style="height: 100% !important;">
+                <h3>Conclusão do Ensino Médio x Proficiência</h3>
+                <table id="tabelaConclusaoProficienciaDesempenho" class="tabela-mini">
+                    <thead>
+                        <tr>
+                            <th>Ano Conclusão</th>
+                            <th>Nº Participantes</th>
+                            <th>% Proficiência</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+ 
+</div>
+</main>
+ 
 <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-
-
+ 
+ 
 <script src="js/filtros.js"></script>
 <script src="js/cards.js"></script>
-
-
-
+ 
+ 
+ 
 <script src="js/graficos.js"></script>
 <script src="js/tabelas.js"></script>
-
-
-
+ 
+ 
+<script type="module" src="js/desempenho.js"></script>
 <script type="module" src="js/perfil.js"></script>
 <script src="js/redacao.js"></script>
 <script src="script.js"></script>
-
+ 
 </body>
 </html>
+  
+

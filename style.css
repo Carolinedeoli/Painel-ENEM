@@ -251,7 +251,8 @@ h2 {
 
 .filtro-container-wrapper,
 .filtro-container-wrapper-perfil,
-.filtro-container-wrapper-redacao {
+.filtro-container-wrapper-redacao,
+.filtro-container-wrapper-desempenho {
     position: fixed;
     top: 15px;
     right: 25px; 
@@ -280,7 +281,8 @@ h2 {
 
 .filtros-card,
 .filtros-card-perfil,
-.filtros-card-redacao {
+.filtros-card-redacao,
+.filtros-card-desempenho {
     position: absolute;
     top: 48px;
     right: 0;
@@ -299,7 +301,8 @@ h2 {
 
 .filtros-card.aberto,
 .filtros-card-perfil.aberto,
-.filtros-card-redacao.aberto {
+.filtros-card-redacao.aberto,
+.filtros-card-desempenho.aberto {
     display: flex;
 }
 
@@ -493,23 +496,220 @@ h2 {
     color: #333;
 }
 
-/* =========================================
-   MEDIA QUERIES (RESPONSIVIDADE GERAL E GRIDS)
-========================================= */
 
-@media(max-width: 950px) {
-    /* Página Perfil e Redação: quebra para 2 colunas */
-    .dashboard-grid-perfil { grid-template-columns: repeat(2, 1fr) !important; }
+/* ================================================================================================================================
+   PÁGINA DESEMPENHO - LAYOUT 3 COLUNAS CORRIGIDO
+==================================================================================================================================== */
+
+#pagina-desempenho {
+    align-items: flex-start !important;
+    width: 100%;
+}
+
+#pagina-desempenho h1 {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* =====================================================================
+   1. GRID PRINCIPAL (3 COLUNAS)
+===================================================================== */
+#pagina-desempenho .dashboard-grid-perfil {
+    display: grid;
+    /* Proporção: Esquerda(0.9) | Meio(1.35) | Direita(0.95) */
+    grid-template-columns: 0.9fr 1.35fr 0.95fr !important;
+    gap: 12px;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    align-items: stretch;
+}
+
+/* =====================================================================
+   2. COMPORTAMENTO INTERNO DAS COLUNAS
+===================================================================== */
+#pagina-desempenho .painel-coluna {
+    display: flex !important; /* Flex é perfeito para empilhar itens verticalmente */
+    flex-direction: column;
+    gap: 12px;
+    min-height: 0;
+    height: 100% !important; 
+}
+
+/* =====================================================================
+   3. CARDS SUPERIORES (NÚMEROS)
+===================================================================== */
+.cards-dupla-desempenho {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0; /* Impede que sejam esmagados */
+}
+
+.cards-dupla-desempenho .card {
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    padding: 10px 12px;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.cards-dupla-desempenho .card h3 {
+    margin: 0 0 4px;
+    font-size: 11.5px;
+    color: #555;
+}
+
+.cards-dupla-desempenho .card p {
+    margin: 0;
+    font-size: 26px !important; /* 🌟 Aumentado (era 18px) */
+    font-weight: 700;
+}
+/* =====================================================================
+   4. CAIXAS BRANCAS (CONTAINERS DE GRÁFICOS E TABELAS)
+===================================================================== */
+#pagina-desempenho .grafico-container-pequeno,
+#pagina-desempenho .tabela-container-mini,
+#pagina-desempenho .card-tabela-media {
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #e2e2e2;
+    box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+    margin-top: 0 !important; 
+}
+
+#pagina-desempenho h3 {
+    margin: 0 0 10px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    flex-shrink: 0;
+}
+
+/* =====================================================================
+   5. GERENCIAMENTO DE ALTURAS (EVITA O ESMAGAMENTO DOS GRÁFICOS)
+===================================================================== */
+/* A tabela de média do meio ocupa apenas a altura do seu próprio texto */
+#pagina-desempenho .card-tabela-media {
+    flex: 0 0 auto !important;
+    height: auto !important;
+}
+
+/* Os gráficos ganham todo o resto do espaço da coluna e não podem encolher demais */
+#pagina-desempenho .grafico-container-pequeno {
+    flex: 1 !important;
+    min-height: 180px !important; 
+}
+
+/* As tabelas das pontas esticam até o fundo da tela */
+#pagina-desempenho .tabela-container-mini:not(.card-tabela-media) {
+    flex: 1 !important;
+}
+
+/* 🌟 DIMINUI A ALTURA DA CURVA DE DENSIDADE (1ª COLUNA) */
+#pagina-desempenho .painel-coluna:nth-child(1) .grafico-container-pequeno {
+    flex: 0 0 220px !important; /* Trava a altura exata do gráfico. Pode diminuir para 200px se quiser menor */
+    min-height: 220px !important;
+}
+/* =====================================================================
+   6. ESTILOS INTERNOS DAS TABELAS
+===================================================================== */
+#pagina-desempenho .tabela-mini,
+#pagina-desempenho .card-tabela-media table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#pagina-desempenho .card-tabela-media th,
+#pagina-desempenho .card-tabela-media td {
+    padding: 5px 4px;
+    font-size: 11px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+#pagina-desempenho .tabela-mini th {
+    padding: 6px 8px;
+    font-size: 10px;
+    font-weight: 700;
+    border-bottom: 2px solid #bdbdbd;
+    text-align: left;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+#pagina-desempenho .tabela-mini td {
+    padding: 5px 8px;
+    font-size: 10px;
+    border-bottom: 1px solid #efefef;
+}
+
+/* =====================================================================
+   7. DIMENSÕES DOS GRÁFICOS PLOTLY
+===================================================================== */
+#pagina-desempenho .js-plotly-plot,
+#pagina-desempenho .plot-container,
+#pagina-desempenho .svg-container {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+#graficoDensidadeDesempenho,
+#graficoDensidadeDepAdmDesempenho,
+#graficoNotaMediaAnoDesempenho {
+    width: 100%;
+    height: 100%;
+    flex: 1;
+    min-height: 0;
+}
+
+
+
+/* =====================================================================
+   8. MEDIA QUERIES LIMPAS E UNIFICADAS (RESPONSIVIDADE)
+===================================================================== */
+@media(max-width: 1200px) {
+    /* Telas médias: cai para 2 colunas, e a terceira coluna (Tabela) vai pro fundo ocupando a tela toda */
+    #pagina-desempenho .dashboard-grid-perfil,
+    .dashboard-grid-perfil { 
+        grid-template-columns: repeat(2, 1fr) !important; 
+    }
+    #pagina-desempenho .painel-coluna:nth-child(3) {
+        grid-column: 1 / span 2;
+        min-height: 350px; 
+    }
 }
 
 @media(max-width: 900px) {
-    /* Página Geral: remove a trava de altura na tela menor */
+    /* Geral: Solta as alturas travadas */
     body { height: auto; overflow-y: auto; }
     .dashboard-grid { grid-template-columns: 1fr; height: auto; }
     #graficoInscritos, #graficoPresenca { height: 250px !important; }
 }
 
-@media(max-width: 700px) {
-    /* Página Perfil e Redação: quebra para 1 coluna no celular */
-    .dashboard-grid-perfil { grid-template-columns: 1fr !important; }
+@media(max-width: 750px) {
+    /* Celulares: Fica tudo 1 coluna empilhada */
+    #pagina-desempenho .dashboard-grid-perfil,
+    .dashboard-grid-perfil { 
+        grid-template-columns: 1fr !important; 
+    }
+    #pagina-desempenho .painel-coluna:nth-child(3) {
+        grid-column: 1;
+    }
+    #pagina-desempenho .painel-coluna {
+        min-height: 400px;
+    }
 }
