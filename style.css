@@ -1,715 +1,1183 @@
-/* =========================================
-   BARRA LATERAL LAYOUT
-========================================= */
+/* =========================================================================
+   PAINEL ENEM — FOLHA DE ESTILO
 
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
-    height: 100vh;
-    overflow: hidden; 
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: row;
+   Organização:
+     1. Tokens de tema (claro e escuro)
+     2. Base e tipografia
+     3. Barra lateral
+     4. Cabeçalho, filtro de ano e tags
+     5. Páginas e grades
+     6. Indicadores
+     7. Caixas de painel e ações de gráfico
+     8. Gráficos
+     9. Tabelas
+    10. Gaveta de filtros
+    11. Estados (carregando, erro, vazio)
+    12. Página "Sobre os Dados"
+    13. Responsividade e preferências do usuário
+
+   DUAS DECISÕES QUE GOVERNAM O LAYOUT
+
+   · ALTURA ÚNICA DE GRÁFICO. Todo gráfico do painel tem a mesma altura
+     (--altura-grafico) e a mesma margem interna (definida em graficos/
+     tema.js). Era daí que vinha a sensação de inconsistência entre Redação
+     e Perfil: as duas páginas mostram o mesmo conteúdo, mas em alturas de
+     86px, 220px e 448px conforme a caixa.
+
+   · APROVEITAR A LARGURA ANTES DA ALTURA. A grade é de 12 colunas e as
+     páginas usam três caixas por linha em telas largas. Uma tela de 1440px
+     mostra Perfil inteiro — indicadores, três gráficos e três tabelas — sem
+     rolagem; a versão anterior exigia rolar duas telas para o mesmo
+     conteúdo, porque empilhava caixas de meia largura.
+========================================================================= */
+
+/* =========================================================================
+   1. TOKENS
+========================================================================= */
+:root {
+    color-scheme: light;
+
+    /* Superfícies */
+    --fundo-app:      #f4f6fa;
+    --superficie:     #ffffff;
+    --superficie-2:   #f8fafc;
+    --superficie-3:   #eef2f7;
+
+    /* Traços */
+    --borda:          #e4e9f0;
+    --borda-forte:    #cfd8e3;
+
+    /* Tinta */
+    --tinta:          #0f172a;
+    --tinta-2:        #475569;
+    --tinta-3:        #7c8798;
+
+    /* Marca */
+    --marca:          #0b2a52;
+    --marca-2:        #123a6d;
+    --marca-clara:    #2a78d6;
+    --marca-contraste:#ffffff;
+
+    /* Séries de dados — a mesma paleta validada de graficos/tema.js */
+    --serie-1: #2a78d6;
+    --serie-2: #eb6834;
+    --serie-3: #1baf7a;
+    --serie-4: #eda100;
+    --serie-5: #e87ba4;
+
+    /* Elevação */
+    --sombra-1: 0 1px 2px rgba(15, 23, 42, .05);
+    --sombra-2: 0 2px 10px rgba(15, 23, 42, .07);
+    --sombra-3: 0 16px 40px rgba(15, 23, 42, .16);
+
+    /* Métrica */
+    --raio:      12px;
+    --raio-p:    8px;
+    --lateral:   240px;
+    --espaco:    12px;
+
+    /* Altura única de todos os gráficos do painel */
+    --altura-grafico: 232px;
 }
 
-/* Estrutura da Barra Lateral */
+:root[data-tema="escuro"] {
+    color-scheme: dark;
+
+    --fundo-app:      #0d1117;
+    --superficie:     #151a22;
+    --superficie-2:   #1b212b;
+    --superficie-3:   #222933;
+
+    --borda:          #262d38;
+    --borda-forte:    #333d4b;
+
+    --tinta:          #f1f5f9;
+    --tinta-2:        #b6c2d2;
+    --tinta-3:        #8b97a8;
+
+    --marca:          #10161f;
+    --marca-2:        #1b2430;
+    --marca-clara:    #3987e5;
+    --marca-contraste:#f1f5f9;
+
+    --serie-1: #3987e5;
+    --serie-2: #d95926;
+    --serie-3: #199e70;
+    --serie-4: #c98500;
+    --serie-5: #d55181;
+
+    --sombra-1: 0 1px 2px rgba(0, 0, 0, .4);
+    --sombra-2: 0 2px 10px rgba(0, 0, 0, .45);
+    --sombra-3: 0 16px 40px rgba(0, 0, 0, .6);
+}
+
+/* =========================================================================
+   2. BASE
+========================================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--fundo-app);
+    color: var(--tinta);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { margin: 0; font-weight: 600; letter-spacing: -0.01em; }
+p { margin: 0; }
+a { color: var(--marca-clara); }
+
+/* O atributo hidden precisa vencer qualquer display declarado por classe.
+   Sem o !important, uma regra como ".btn-filtros { display: inline-flex }"
+   tem a mesma especificidade e ganha por vir depois na folha — foi assim
+   que o botão de filtros continuou aparecendo na aba "Sobre os Dados". */
+[hidden] { display: none !important; }
+
+code {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: .88em;
+    background: var(--superficie-3);
+    border-radius: 4px;
+    padding: .1em .35em;
+}
+
+:where(button, a, input, select, summary):focus-visible {
+    outline: 2px solid var(--marca-clara);
+    outline-offset: 2px;
+    border-radius: var(--raio-p);
+}
+
+.pular-conteudo {
+    position: absolute;
+    left: -9999px;
+    z-index: 100;
+    padding: 10px 16px;
+    background: var(--superficie);
+    border-radius: var(--raio-p);
+    box-shadow: var(--sombra-2);
+}
+.pular-conteudo:focus { left: 12px; top: 12px; }
+
+/* =========================================================================
+   3. BARRA LATERAL
+========================================================================= */
 .barra-lateral {
-    width: 250px;
-    background-color: #002d62; 
-    color: white;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    width: var(--lateral);
+    height: 100vh;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    box-shadow: 2px 0px 10px rgba(0,0,0,0.08);
-    flex-shrink: 0;
+    background: var(--marca);
+    color: #dbe4f0;
+    border-right: 1px solid rgba(255, 255, 255, .07);
 }
 
 .logo-painel {
-    padding: 22px 20px;
-    text-align: center;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 16px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, .09);
 }
 
-.logo-painel h2 {
-    font-size: 20px;
-    margin: 0;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-}
+.logo-marca { display: flex; flex-shrink: 0; }
+.logo-texto { display: flex; flex-direction: column; line-height: 1.2; }
+.logo-texto strong { font-size: 15px; color: #fff; letter-spacing: -0.01em; }
+.logo-texto small { font-size: 11px; color: #93a7c2; letter-spacing: .04em; }
 
 .menu-navegacao {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 20px 12px;
-}
-
-/* Botões Sidebar */
-.btn-nav {
-    background: transparent;
-    color: #94a3b8; 
-    border: none;
-    padding: 12px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    text-align: left;
-    font-size: 14px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: all 0.2s ease;
-}
-
-.btn-nav:hover {
-    background-color: rgba(255,255,255,0.05);
-    color: white;
-}
-
-.btn-nav.ativo {
-    background-color: white;
-    color: #002d62; 
-    box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
-}
-
-.btn-nav svg {
-    stroke: currentColor;
-}
-
-/* Espaço do Painel na Direita */
-.conteudo-principal {
+    gap: 3px;
+    padding: 12px 9px;
     flex: 1;
-    padding: 15px 20px 20px 20px;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    position: relative; 
-    height: 100vh;
-    box-sizing: border-box;
-}
-
-/* Alternador das Páginas Internas */
-.pagina-view {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 0;
-}
-
-h1 {
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 26px;
-    flex-shrink: 0;
-}
-
-h2 {
-    margin-top: 0;
-    margin-bottom: 12px;
-    font-size: 16px;
-}
-
-/* =========================================
-   CARDS SUPERIORES GERAIS
-========================================= */
-
-.cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 15px;
-    flex-shrink: 0;
-}
-
-.card {
-    background: white;
-    padding: 12px 15px;
-    border-radius: 12px;
-    flex: 1;
-    min-width: 180px;
-    box-shadow: 0px 2px 8px rgba(0,0,0,0.06);
-}
-
-.card h3 {
-    margin-top: 0;
-    margin-bottom: 5px;
-    font-size: 13px;
-    color: #555;
-}
-
-.card p {
-    font-size: 22px;
-    font-weight: bold;
-    margin: 0;
-}
-
-.info {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background-color: #f0f0f0;
-    color: #555;
-    font-size: 11px;
-    font-weight: bold;
-    cursor: help;
-    margin-left: 4px;
-}
-
-/* ================================================================================================================================
-   PAGINA GERAL (GRÁFICOS E TABELA)
-==================================================================================================================================== */
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 15px;
-    flex: 1; 
-    min-height: 0; 
-    margin-bottom: 5px;
-}
-
-.painel-esquerda {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    height: 100%;
-    min-height: 0;
-}
-
-.grafico-box {
-    background: white;
-    border-radius: 10px;
-    padding: 12px;
-    flex: 1; 
-    display: flex;
-    flex-direction: column;
-    min-height: 0; 
-    box-shadow: 0px 2px 8px rgba(0,0,0,0.05);
-}
-
-.grafico {
-    flex: 1;
-    width: 100%;
-    min-height: 0;
-}
-
-#graficoInscritos, #graficoPresenca {
-    width: 100% !important;
-    height: 100% !important; 
-}
-
-.painel-direita {
-    display: flex;
-    width: 100%;       
-    height: 100%;      
-    min-height: 0;
-    align-items: stretch; 
-}
-
-.tabela-container {
-    background-color: white; 
-    border-radius: 10px;    
-    padding: 15px;          
-    box-shadow: 0px 2px 9px rgba(0,0,0,0.05); 
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-#tabelaRedacao {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: transparent;
-}
-
-#tabelaRedacao th, #tabelaRedacao td {
-    padding: 13px 12px;  
-    border-bottom: 2px solid #ccc; 
-    font-size: 12px;
-    text-align: left;
-    background-color: transparent;
-}
-
-#tabelaRedacao th {
-    font-weight: bold;
-    border-bottom: 3px solid #999; 
-    position: sticky;
-    top: 0;
-}
-
-/* =========================================
-   SISTEMA DE FILTROS FLUTUANTES (TODAS AS PÁGINAS)
-========================================= */
-
-.filtro-container-wrapper,
-.filtro-container-wrapper-perfil,
-.filtro-container-wrapper-redacao,
-.filtro-container-wrapper-desempenho {
-    position: fixed;
-    top: 15px;
-    right: 25px; 
-    z-index: 2000;
-    display: inline-block;
-}
-
-.btn-filtros-novo {
-    background: white;
-    color: #475569;
-    border: 1px solid #e2e8f0;
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    box-shadow: 0px 1px 3px rgba(0,0,0,0.05);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-}
-
-.btn-filtros-novo:hover {
-    background-color: #f8fafc;
-    border-color: #cbd5e1;
-}
-
-.filtros-card,
-.filtros-card-perfil,
-.filtros-card-redacao,
-.filtros-card-desempenho {
-    position: absolute;
-    top: 48px;
-    right: 0;
-    width: 280px;
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.08);
-    padding: 20px;
-    display: none; 
-    flex-direction: column;
-    gap: 16px;
-    max-height: 80vh; 
     overflow-y: auto;
 }
 
-.filtros-card.aberto,
-.filtros-card-perfil.aberto,
-.filtros-card-redacao.aberto,
-.filtros-card-desempenho.aberto {
+.btn-nav {
     display: flex;
+    align-items: center;
+    gap: 11px;
+    width: 100%;
+    padding: 9px 12px;
+    border: 0;
+    border-radius: var(--raio-p);
+    background: transparent;
+    color: #a8bad2;
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color .15s, color .15s;
+}
+
+.btn-nav svg { flex-shrink: 0; opacity: .85; }
+.btn-nav:hover { background: rgba(255, 255, 255, .07); color: #fff; }
+
+.btn-nav.ativo {
+    background: var(--marca-clara);
+    color: #fff;
+    font-weight: 600;
+}
+.btn-nav.ativo svg { opacity: 1; }
+
+.rodape-lateral {
+    padding: 12px 16px 16px;
+    border-top: 1px solid rgba(255, 255, 255, .09);
+    font-size: 11.5px;
+    color: #8ba0bd;
+}
+
+.fonte-dados { line-height: 1.5; }
+.fonte-dados a { color: #a9c6ec; text-decoration: none; }
+.fonte-dados a:hover { text-decoration: underline; }
+
+.selo-ambiente {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 9px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .09);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    color: #c3d4ea;
+}
+
+.selo-ambiente::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--serie-3);
+}
+.selo-ambiente[data-estado="alerta"]::before { background: var(--serie-4); }
+
+/* =========================================================================
+   4. CABEÇALHO, FILTRO DE ANO E TAGS
+========================================================================= */
+.conteudo-principal {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px 22px;
+}
+
+.topo {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 14px 0 12px;
+    background: var(--fundo-app);
+    border-bottom: 1px solid var(--borda);
+}
+
+.topo-titulo h1 {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    font-size: 20px;
+}
+
+/* O ano ao lado do título: discreto, mas sempre presente. Quem olha o
+   painel de longe precisa saber de que edição são os números sem procurar
+   o filtro. */
+.titulo-ano {
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: var(--marca-clara);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    font-variant-numeric: tabular-nums;
+}
+
+.subtitulo {
+    margin-top: 2px;
+    font-size: 12.5px;
+    color: var(--tinta-3);
+    max-width: 72ch;
+}
+
+.topo-acoes { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.controles-ano {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 8px 3px 11px;
+    border: 1px solid var(--borda-forte);
+    border-radius: 999px;
+    background: var(--superficie);
+    box-shadow: var(--sombra-1);
+}
+
+.controles-ano-rotulo {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--tinta-3);
+}
+
+.seletor-ano { display: flex; gap: 2px; }
+
+.tag-ano {
+    padding: 5px 10px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--tinta-2);
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    transition: background-color .15s, color .15s;
+}
+
+.tag-ano:hover { background: var(--superficie-3); color: var(--tinta); }
+
+.tag-ano.ativa {
+    background: var(--marca-clara);
+    color: #fff;
+}
+
+.btn-icone,
+.btn-filtros {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 13px;
+    border: 1px solid var(--borda-forte);
+    border-radius: var(--raio-p);
+    background: var(--superficie);
+    color: var(--tinta-2);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--sombra-1);
+    transition: background-color .15s, border-color .15s, color .15s;
+}
+
+.btn-icone { padding: 8px; }
+
+.btn-icone:hover,
+.btn-filtros:hover {
+    background: var(--superficie-2);
+    border-color: var(--tinta-3);
+    color: var(--tinta);
+}
+
+.icone-escuro { display: none; }
+:root[data-tema="escuro"] .icone-claro { display: none; }
+:root[data-tema="escuro"] .icone-escuro { display: block; }
+
+.contador-filtros {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 19px;
+    height: 19px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--marca-clara);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* --- Tags do recorte ativo ------------------------------------------- */
+.tags-filtros {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px 0 0;
+}
+
+.tags-rotulo {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--tinta-3);
+    margin-right: 2px;
+}
+
+.tag-filtro {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px 4px 10px;
+    border: 1px solid var(--borda-forte);
+    border-radius: 999px;
+    background: var(--superficie);
+    color: var(--tinta-2);
+    font: inherit;
+    font-size: 11.5px;
+    cursor: pointer;
+    transition: border-color .15s, color .15s, background-color .15s;
+}
+
+.tag-filtro:hover {
+    border-color: var(--serie-2);
+    color: var(--tinta);
+    background: var(--superficie-2);
+}
+
+.tag-filtro-dimensao { color: var(--tinta-3); }
+.tag-filtro-dimensao::after { content: ":"; }
+.tag-filtro-valor { font-weight: 600; }
+.tag-filtro svg { opacity: .55; }
+.tag-filtro:hover svg { opacity: 1; color: var(--serie-2); }
+
+.tag-limpar {
+    padding: 4px 10px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--marca-clara);
+    font: inherit;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.tag-limpar:hover { text-decoration: underline; }
+
+/* =========================================================================
+   5. PÁGINAS E GRADES
+========================================================================= */
+.pagina-view {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaco);
+    padding-top: 12px;
+    min-height: 50vh;
+}
+
+.grade {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--espaco);
+    align-items: stretch;
+}
+
+.col-3  { grid-column: span 3; }
+.col-4  { grid-column: span 4; }
+.col-6  { grid-column: span 6; }
+.col-8  { grid-column: span 8; }
+.col-12 { grid-column: span 12; }
+
+/* =========================================================================
+   6. INDICADORES
+
+   Rótulo, valor e explicação, sempre nessa ordem. A explicação fica visível
+   ao lado do número: quem lê um painel de estatística precisa saber sobre
+   que população o valor foi calculado, e esconder isso num tooltip
+   transforma cada card numa adivinhação.
+========================================================================= */
+.faixa-indicadores {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: var(--espaco);
+}
+
+.indicador {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 12px 14px 13px;
+    background: var(--superficie);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra-1);
+}
+
+.indicador-rotulo {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--tinta-3);
+}
+
+/* Números grandes usam figuras proporcionais — tabular deixa o valor solto. */
+.indicador-valor {
+    font-size: 26px;
+    font-weight: 650;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--tinta);
+}
+
+.indicador-valor-texto { font-size: 18px; line-height: 1.3; }
+
+.indicador-descricao {
+    margin-top: 3px;
+    font-size: 11px;
+    line-height: 1.45;
+    color: var(--tinta-3);
+}
+
+/* =========================================================================
+   7. CAIXAS DE PAINEL E AÇÕES DE GRÁFICO
+========================================================================= */
+.painel-box {
+    display: flex;
+    flex-direction: column;
+    padding: 13px 15px 15px;
+    min-width: 0;
+    background: var(--superficie);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra-1);
+}
+
+.painel-box-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+    min-height: 26px;
+}
+
+.painel-box-topo h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--tinta);
+    line-height: 1.3;
+}
+
+.painel-box-nota { font-size: 10.5px; color: var(--tinta-3); flex-shrink: 0; }
+
+.acoes-grafico { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+
+.btn-acao {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 4px 6px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--tinta-3);
+    cursor: pointer;
+    transition: background-color .15s, color .15s, border-color .15s;
+}
+
+.btn-acao:hover { background: var(--superficie-3); color: var(--tinta); }
+
+.btn-acao[aria-pressed="true"] {
+    background: var(--marca-clara);
+    border-color: var(--marca-clara);
+    color: #fff;
+}
+
+/* --- Menu de tipo de gráfico ----------------------------------------- */
+.menu-tipo { position: relative; }
+
+.menu-tipo-lista {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    z-index: 40;
+    min-width: 168px;
+    padding: 5px;
+    background: var(--superficie);
+    border: 1px solid var(--borda-forte);
+    border-radius: var(--raio-p);
+    box-shadow: var(--sombra-2);
+}
+
+.opcao-tipo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: 7px 9px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--tinta-2);
+    font: inherit;
+    font-size: 12.5px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.opcao-tipo:hover { background: var(--superficie-2); color: var(--tinta); }
+
+.opcao-tipo.ativa {
+    background: var(--superficie-3);
+    color: var(--tinta);
+    font-weight: 600;
+}
+
+.opcao-tipo svg { flex-shrink: 0; color: var(--marca-clara); }
+
+/* --- Seletor de área (página Desempenho) ------------------------------ */
+.campo-area {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-shrink: 0;
+}
+
+.campo-area > span {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--tinta-3);
+}
+
+.select-compacto {
+    padding: 5px 9px;
+    border: 1px solid var(--borda-forte);
+    border-radius: 6px;
+    background: var(--superficie);
+    color: var(--tinta);
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* --- Faixa de médias por área ---------------------------------------- */
+.medias-areas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+    gap: 9px;
+}
+
+.media-area {
+    padding: 9px 12px;
+    border: 1px solid var(--borda);
+    border-radius: var(--raio-p);
+    background: var(--superficie-2);
+}
+
+.media-area-nome {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--tinta-3);
+}
+
+/* O ponto colorido repete a identidade da área usada nos gráficos. */
+.media-area-ponto {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.media-area-valor {
+    margin-top: 2px;
+    font-size: 19px;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    color: var(--tinta);
+}
+
+/* =========================================================================
+   8. GRÁFICOS
+
+   Altura fixa e igual em todas as páginas. É o que faz Redação e Perfil
+   pararem de parecer painéis diferentes — e o que permite prever quanto de
+   tela uma linha da grade vai ocupar.
+========================================================================= */
+.grafico {
+    width: 100%;
+    min-width: 0;
+    height: var(--altura-grafico);
+}
+
+/* A tabela equivalente de cada gráfico: sempre disponível, nunca só o hover. */
+.tabela-twin {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--borda);
+    max-height: 200px;
+    overflow: auto;
+}
+
+/* =========================================================================
+   9. TABELAS
+========================================================================= */
+.corpo-tabela { flex: 1; min-height: 0; }
+
+.tabela-rolagem { overflow-x: auto; }
+.tabela-media { max-height: 198px; overflow-y: auto; }
+.tabela-alta  { max-height: var(--altura-grafico); overflow-y: auto; }
+
+.tabela {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+}
+
+.tabela th,
+.tabela td {
+    padding: 7px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--borda);
+    white-space: nowrap;
+}
+
+.tabela th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--superficie);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    color: var(--tinta-3);
+    border-bottom: 1px solid var(--borda-forte);
+}
+
+.tabela td { color: var(--tinta-2); }
+.tabela td:first-child { color: var(--tinta); font-weight: 500; }
+
+/* Números alinhados à direita com dígitos de largura fixa: é o caso em que
+   tabular-nums ajuda, porque as colunas precisam alinhar verticalmente. */
+.tabela .num,
+.tabela td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.tabela tbody tr:hover td { background: var(--superficie-2); }
+.tabela tbody tr:last-child td { border-bottom: 0; }
+
+/* Tabelas de texto corrido preferem quebrar linha a empurrar uma barra de
+   rolagem horizontal. */
+.tabela-texto th,
+.tabela-texto td {
+    white-space: normal;
+    min-width: 9ch;
+}
+
+.tabela-vazia td {
+    text-align: center;
+    color: var(--tinta-3);
+    font-style: italic;
+    padding: 20px 10px;
+}
+
+/* Barra proporcional dentro da célula de percentual */
+.celula-barra {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.barra-mini {
+    flex: 1;
+    max-width: 64px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--superficie-3);
+    overflow: hidden;
+}
+
+.barra-mini span {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: var(--serie-1);
+}
+
+/* =========================================================================
+   10. GAVETA DE FILTROS
+========================================================================= */
+.fundo-drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(15, 23, 42, .38);
+    backdrop-filter: blur(1px);
+}
+
+.filtro-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 70;
+    width: min(370px, 92vw);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--superficie);
+    border-left: 1px solid var(--borda);
+    box-shadow: var(--sombra-3);
+    transform: translateX(100%);
+    transition: transform .22s ease;
+}
+
+.filtro-drawer.aberto { transform: translateX(0); }
+
+.drawer-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--borda);
+}
+.drawer-topo h2 { font-size: 15px; }
+
+.drawer-fechar {
+    display: inline-flex;
+    padding: 6px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--tinta-3);
+    cursor: pointer;
+}
+.drawer-fechar:hover { background: var(--superficie-3); color: var(--tinta); }
+
+.drawer-busca {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 18px;
+    padding: 8px 11px;
+    border: 1px solid var(--borda-forte);
+    border-radius: var(--raio-p);
+    background: var(--superficie-2);
+    color: var(--tinta-3);
+}
+
+.drawer-busca-campo {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: var(--tinta);
+    font: inherit;
+    font-size: 13px;
+    outline: none;
+}
+
+.drawer-corpo {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 18px 12px;
+}
+
+.drawer-rodape {
+    padding: 12px 18px;
+    border-top: 1px solid var(--borda);
+    background: var(--superficie-2);
 }
 
 .filtro-grupo {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;               
-    margin-bottom: 18px;     
+    border-bottom: 1px solid var(--borda);
+    padding: 2px 0;
 }
+.filtro-grupo:last-child { border-bottom: 0; }
 
 .filtro-titulo {
-    font-size: 14px;         
-    font-weight: 700;
-    color: #002d62; 
-    margin-bottom: 4px;      
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 2px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--tinta);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
 }
+
+.filtro-titulo::-webkit-details-marker { display: none; }
+
+/* Seta indicando aberto/fechado, desenhada em CSS */
+.filtro-titulo::after {
+    content: "";
+    margin-left: auto;
+    width: 7px;
+    height: 7px;
+    border-right: 1.8px solid var(--tinta-3);
+    border-bottom: 1.8px solid var(--tinta-3);
+    transform: rotate(45deg) translate(-2px, -2px);
+    transition: transform .18s;
+}
+.filtro-grupo[open] > .filtro-titulo::after {
+    transform: rotate(-135deg) translate(-2px, -2px);
+}
+
+.filtro-selo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--marca-clara);
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 700;
+}
+
+.filtro-conteudo { padding: 2px 2px 12px; }
 
 .checkbox-lista {
     display: flex;
     flex-direction: column;
-    gap: 8px;                
-}
-
-.checkbox-lista::-webkit-scrollbar {
-    width: 6px;
-}
-
-.checkbox-lista::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 4px;
-}
-
-.filtro-select, .filtro-select-ano {
-    font-family: Arial, sans-serif;
-    font-size: 13px;
-    color: #1e293b;
-    padding: 6px 10px;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    background-color: #fff;
-    cursor: pointer;
-    outline: none;
-    width: 100%;
-}
-
-.filtro-select-ano {
-    width: 85px;
+    gap: 2px;
+    max-height: 230px;
+    overflow-y: auto;
 }
 
 .filtro-checkbox-label {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: #1e3a5f; 
+    gap: 9px;
+    padding: 6px 7px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    color: var(--tinta-2);
     cursor: pointer;
-    font-weight: 400;
 }
+.filtro-checkbox-label:hover { background: var(--superficie-2); color: var(--tinta); }
 
 .filtro-checkbox-label input[type="checkbox"] {
-    accent-color: #002d62; 
-    width: 14px;
-    height: 14px;
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    accent-color: var(--marca-clara);
     cursor: pointer;
-    margin-right: 0;
 }
 
 .btn-limpar-filtros {
-    background-color: #fff;
-    color: #64748b;
-    border: 1px solid #e2e8f0;
-    padding: 10px 12px;       
-    border-radius: 6px;
-    font-size: 13px;          
-    font-weight: 600;
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    transition: all 0.2s ease;
-    width: 100%; 
-    box-sizing: border-box;
-    margin-bottom: 20px;      
-}
-
-/* ===========================================================================================
-   GRID ESPECÍFICO DAS PÁGINAS PERFIL E REDAÇÃO (3 COLUNAS)
-========================================================================================== */
-
-.dashboard-grid-perfil {
-    display: grid !important;
-    /* Força as 3 colunas com as proporções corretas */
-    grid-template-columns: 0.75fr 1.15fr 1fr !important; 
-    gap: 10px !important;
-    margin-top: 0px !important; 
-    width: 100% !important;
-}
-
-.painel-coluna {
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    display: flex;
-    flex-direction: column;
-    height: 100% !important;
-    gap: 0px; 
-    min-width: 0 !important; /*TRAVA 1: Impede a coluna de vazar da tela */
-}
-
-.tabela-container-mini, 
-.grafico-container-pequeno, 
-.grafico-container-medio {
-    background-color: #ffffff !important;
-    border-radius: 8px !important;
-    padding: 15px 20px !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
-    border: 1px solid #e0e0e0 !important;
-    box-sizing: border-box !important;
-    display: flex !important;
-    flex-direction: column !important;
-    min-width: 0 !important; /* TRAVA 2: Impede o gráfico de vazar da caixa */
-}
-
-.grafico-container-pequeno { height: 160px !important; }
-.grafico-container-medio   { height: 360px !important; }
-
-.tabela-container-mini h3,
-.grafico-container-pequeno h3,
-.grafico-container-medio h3 {
-    margin-top: 0 !important;
-    margin-bottom: 10px !important;
-    font-size: 15px !important;
-    color: #333 !important;
-    text-align: center !important;
-    font-weight: 600 !important;
-    flex-shrink: 0 !important; /* TRAVA 3: Impede o gráfico de engolir os títulos */
-}
-
-.tabela-container-mini {
-    flex: 1 !important;         
-    width: 100% !important;
-    height: auto !important;     
-    min-height: 0 !important;
-    overflow: hidden !important; 
-}
-
-/* Aplica as mesmas regras de tamanho para os IDs das DUAS PÁGINAS */
-#tabelaEscola, #tabelaDepAdm, #tabelaConclusao,
-#graficoRaca, #graficoSexo, #graficoIdade,
-#tabelaEscolaRedacao, #tabelaDepAdmRedacao, #tabelaConclusaoRedacao,
-#graficoRacaRedacao, #graficoSexoRedacao, #graficoIdadeRedacao {
-    flex: 1 !important;
-    width: 100% !important;
-    height: 100% !important;
-    min-height: 0 !important;
-    overflow: hidden !important; 
-}
-
-/* Força a área interna do gráfico de raça a expandir ao máximo nas duas abas */
-#graficoRaca, #graficoRacaRedacao {
-    height: 100% !important;
-    min-height: 110px !important;
-}
-
-.tabela-mini, .tabela-estilo-painel, .js-plotly-plot {
-    flex: 1;
-    width: 100% !important;
-}
-
-.tabela-mini th, .tabela-mini td {
-    padding: 9px;
-    border-bottom: 1px solid #eee;
-    text-align: left;
-}
-
-.tabela-estilo-painel th, 
-.tabela-estilo-painel td {
-    padding: 8px 9px;  
-    font-size: 11px;    
-    border-bottom: 2px solid #ccc; 
-    text-align: left;
-}
-
-.tabela-estilo-painel th {
-    font-weight: bold;
-    border-bottom: 3px solid #999; 
-    position: sticky;
-    top: 0;
-    color: #333;
-}
-
-
-/* ================================================================================================================================
-   PÁGINA DESEMPENHO - LAYOUT 3 COLUNAS CORRIGIDO
-==================================================================================================================================== */
-
-#pagina-desempenho {
-    align-items: flex-start !important;
+    gap: 7px;
     width: 100%;
-}
-
-#pagina-desempenho h1 {
-    width: 100%;
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-/* =====================================================================
-   1. GRID PRINCIPAL (3 COLUNAS)
-===================================================================== */
-#pagina-desempenho .dashboard-grid-perfil {
-    display: grid;
-    /* Proporção: Esquerda(0.9) | Meio(1.35) | Direita(0.95) */
-    grid-template-columns: 0.9fr 1.35fr 0.95fr !important;
-    gap: 12px;
-    width: 100%;
-    flex: 1;
-    min-height: 0;
-    align-items: stretch;
-}
-
-/* =====================================================================
-   2. COMPORTAMENTO INTERNO DAS COLUNAS
-===================================================================== */
-#pagina-desempenho .painel-coluna {
-    display: flex !important; /* Flex é perfeito para empilhar itens verticalmente */
-    flex-direction: column;
-    gap: 12px;
-    min-height: 0;
-    height: 100% !important; 
-}
-
-/* =====================================================================
-   3. CARDS SUPERIORES (NÚMEROS)
-===================================================================== */
-.cards-dupla-desempenho {
-    display: flex;
-    gap: 10px;
-    flex-shrink: 0; /* Impede que sejam esmagados */
-}
-
-.cards-dupla-desempenho .card {
-    background: #fff;
-    border-radius: 8px;
-    border: 1px solid #e5e5e5;
-    box-shadow: 0 2px 8px rgba(0,0,0,.05);
-    padding: 10px 12px;
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.cards-dupla-desempenho .card h3 {
-    margin: 0 0 4px;
-    font-size: 11.5px;
-    color: #555;
-}
-
-.cards-dupla-desempenho .card p {
-    margin: 0;
-    font-size: 26px !important; /* 🌟 Aumentado (era 18px) */
-    font-weight: 700;
-}
-/* =====================================================================
-   4. CAIXAS BRANCAS (CONTAINERS DE GRÁFICOS E TABELAS)
-===================================================================== */
-#pagina-desempenho .grafico-container-pequeno,
-#pagina-desempenho .tabela-container-mini,
-#pagina-desempenho .card-tabela-media {
-    background: #fff;
-    border-radius: 8px;
-    border: 1px solid #e2e2e2;
-    box-shadow: 0 2px 8px rgba(0,0,0,.05);
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    min-height: 0;
-    margin-top: 0 !important; 
-}
-
-#pagina-desempenho h3 {
-    margin: 0 0 10px;
-    text-align: center;
-    font-size: 14px;
+    padding: 10px;
+    border: 1px solid var(--borda-forte);
+    border-radius: var(--raio-p);
+    background: var(--superficie);
+    color: var(--tinta-2);
+    font: inherit;
+    font-size: 13px;
     font-weight: 600;
-    color: #333;
-    flex-shrink: 0;
+    cursor: pointer;
+    transition: background-color .15s, color .15s;
+}
+.btn-limpar-filtros:hover { background: var(--superficie-3); color: var(--tinta); }
+
+.filtro-vazio {
+    padding: 8px 7px;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--tinta-3);
 }
 
-/* =====================================================================
-   5. GERENCIAMENTO DE ALTURAS (EVITA O ESMAGAMENTO DOS GRÁFICOS)
-===================================================================== */
-/* A tabela de média do meio ocupa apenas a altura do seu próprio texto */
-#pagina-desempenho .card-tabela-media {
-    flex: 0 0 auto !important;
-    height: auto !important;
+/* =========================================================================
+   11. ESTADOS
+========================================================================= */
+.estado-camada {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    border-radius: var(--raio);
+    background: color-mix(in srgb, var(--fundo-app) 86%, transparent);
+    backdrop-filter: blur(2px);
 }
 
-/* Os gráficos ganham todo o resto do espaço da coluna e não podem encolher demais */
-#pagina-desempenho .grafico-container-pequeno {
-    flex: 1 !important;
-    min-height: 180px !important; 
-}
-
-/* As tabelas das pontas esticam até o fundo da tela */
-#pagina-desempenho .tabela-container-mini:not(.card-tabela-media) {
-    flex: 1 !important;
-}
-
-/* 🌟 DIMINUI A ALTURA DA CURVA DE DENSIDADE (1ª COLUNA) */
-#pagina-desempenho .painel-coluna:nth-child(1) .grafico-container-pequeno {
-    flex: 0 0 220px !important; /* Trava a altura exata do gráfico. Pode diminuir para 200px se quiser menor */
-    min-height: 220px !important;
-}
-/* =====================================================================
-   6. ESTILOS INTERNOS DAS TABELAS
-===================================================================== */
-#pagina-desempenho .tabela-mini,
-#pagina-desempenho .card-tabela-media table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-#pagina-desempenho .card-tabela-media th,
-#pagina-desempenho .card-tabela-media td {
-    padding: 5px 4px;
-    font-size: 11px;
+.estado-caixa {
+    max-width: 460px;
+    padding: 26px 28px;
     text-align: center;
-    border-bottom: 1px solid #eee;
+    background: var(--superficie);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra-2);
 }
 
-#pagina-desempenho .tabela-mini th {
-    padding: 6px 8px;
-    font-size: 10px;
-    font-weight: 700;
-    border-bottom: 2px solid #bdbdbd;
+.estado-titulo {
+    margin-top: 13px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--tinta);
+}
+
+.estado-detalhe {
+    margin-top: 7px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--tinta-2);
+}
+
+.estado-spinner {
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+    border: 2.5px solid var(--borda-forte);
+    border-top-color: var(--marca-clara);
+    border-radius: 50%;
+    animation: girar .8s linear infinite;
+}
+
+@keyframes girar { to { transform: rotate(360deg); } }
+
+.estado-icone { display: flex; justify-content: center; color: var(--tinta-3); }
+.estado-erro .estado-icone { color: var(--serie-2); }
+
+/* Atualização de uma página que já tem conteúdo: uma pílula no alto, e não
+   a caixa grande da primeira carga. O véu é mais leve de propósito — os
+   números anteriores continuam legíveis por trás, o que deixa claro que a
+   tela está sendo trocada e não recarregada do zero. */
+.estado-camada.estado-atualizando {
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 15vh;
+    background: color-mix(in srgb, var(--fundo-app) 45%, transparent);
+    backdrop-filter: blur(1px);
+}
+
+.estado-atualizando .estado-caixa {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 17px 9px 14px;
+    border-radius: 999px;
     text-align: left;
-    background: #fff;
-    position: sticky;
-    top: 0;
-    z-index: 2;
 }
 
-#pagina-desempenho .tabela-mini td {
-    padding: 5px 8px;
-    font-size: 10px;
-    border-bottom: 1px solid #efefef;
+.estado-atualizando .estado-titulo {
+    margin-top: 0;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
-/* =====================================================================
-   7. DIMENSÕES DOS GRÁFICOS PLOTLY
-===================================================================== */
-#pagina-desempenho .js-plotly-plot,
-#pagina-desempenho .plot-container,
-#pagina-desempenho .svg-container {
-    width: 100% !important;
-    height: 100% !important;
+.estado-atualizando .estado-spinner {
+    width: 15px;
+    height: 15px;
+    margin: 0;
+    border-width: 2px;
 }
 
-#graficoDensidadeDesempenho,
-#graficoDensidadeDepAdmDesempenho,
-#graficoNotaMediaAnoDesempenho {
-    width: 100%;
-    height: 100%;
-    flex: 1;
-    min-height: 0;
+/* =========================================================================
+   12. PÁGINA "SOBRE OS DADOS"
+========================================================================= */
+.prosa { font-size: 13px; line-height: 1.6; color: var(--tinta-2); }
+.prosa p + p { margin-top: 10px; }
+.prosa strong { color: var(--tinta); font-weight: 600; }
+
+.lista-marcada {
+    margin: 0;
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.lista-marcada::marker { color: var(--tinta-3); }
+
+.lista-definicao { margin: 0; }
+.lista-definicao dt { font-weight: 600; color: var(--tinta); font-size: 12.5px; }
+.lista-definicao dd { margin: 2px 0 10px; font-size: 12.5px; }
+
+.destaque-ambiente {
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    border-left: 3px solid var(--marca-clara);
+    border-radius: 0 var(--raio-p) var(--raio-p) 0;
+    background: var(--superficie-2);
+    font-size: 12.5px;
+    color: var(--tinta-2);
 }
 
+/* =========================================================================
+   13. RESPONSIVIDADE E PREFERÊNCIAS
+========================================================================= */
 
+/* Telas médias: três caixas por linha viram duas. */
+@media (max-width: 1240px) {
+    .col-3, .col-4 { grid-column: span 6; }
+    .col-6, .col-8 { grid-column: span 12; }
+}
 
-/* =====================================================================
-   8. MEDIA QUERIES LIMPAS E UNIFICADAS (RESPONSIVIDADE)
-===================================================================== */
-@media(max-width: 1200px) {
-    /* Telas médias: cai para 2 colunas, e a terceira coluna (Tabela) vai pro fundo ocupando a tela toda */
-    #pagina-desempenho .dashboard-grid-perfil,
-    .dashboard-grid-perfil { 
-        grid-template-columns: repeat(2, 1fr) !important; 
+/* Tablets: coluna única, barra lateral vira faixa de ícones. */
+@media (max-width: 900px) {
+    :root { --lateral: 64px; --altura-grafico: 220px; }
+
+    .logo-texto,
+    .rodape-lateral { display: none; }
+
+    .logo-painel { justify-content: center; padding: 16px 8px; }
+    .menu-navegacao { padding: 12px 8px; }
+
+    .btn-nav {
+        justify-content: center;
+        padding: 12px 8px;
+        font-size: 0;
+        gap: 0;
     }
-    #pagina-desempenho .painel-coluna:nth-child(3) {
-        grid-column: 1 / span 2;
-        min-height: 350px; 
+    .btn-nav svg { width: 20px; height: 20px; }
+
+    .col-3, .col-4, .col-6, .col-8, .col-12 { grid-column: span 12; }
+
+    .conteudo-principal { padding: 0 14px 20px; }
+}
+
+@media (max-width: 620px) {
+    .topo { align-items: flex-start; flex-direction: column; gap: 10px; }
+    .topo-acoes { width: 100%; }
+    .controles-ano { flex: 1; overflow-x: auto; }
+    .indicador-valor { font-size: 23px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms;
+        animation-iteration-count: 1;
+        transition-duration: .01ms;
     }
 }
 
-@media(max-width: 900px) {
-    /* Geral: Solta as alturas travadas */
-    body { height: auto; overflow-y: auto; }
-    .dashboard-grid { grid-template-columns: 1fr; height: auto; }
-    #graficoInscritos, #graficoPresenca { height: 250px !important; }
-}
+@media print {
+    .barra-lateral, .topo-acoes, .acoes-grafico, .tags-filtros,
+    .filtro-drawer, .fundo-drawer, .pular-conteudo { display: none; }
 
-@media(max-width: 750px) {
-    /* Celulares: Fica tudo 1 coluna empilhada */
-    #pagina-desempenho .dashboard-grid-perfil,
-    .dashboard-grid-perfil { 
-        grid-template-columns: 1fr !important; 
-    }
-    #pagina-desempenho .painel-coluna:nth-child(3) {
-        grid-column: 1;
-    }
-    #pagina-desempenho .painel-coluna {
-        min-height: 400px;
-    }
+    body { display: block; background: #fff; }
+    .painel-box, .indicador { break-inside: avoid; box-shadow: none; }
 }

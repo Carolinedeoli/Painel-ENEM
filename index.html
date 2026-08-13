@@ -1,1253 +1,456 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" data-tema="claro">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel ENEM</title>
+    <title>Painel ENEM — 2019 a 2023</title>
+    <meta name="description"
+          content="Painel interativo dos microdados do ENEM de 2019 a 2023: participação, redações zeradas, perfil dos participantes e desempenho por área.">
+    <meta name="theme-color" content="#0b2a52">
+
+    <!--
+        Base dos arquivos de dados. Deixe vazio para usar a pasta dados/ do
+        próprio site. Para servir os Parquet de fora do repositório (Release
+        do GitHub, bucket, CDN), basta preencher o content aqui.
+    -->
+    <meta name="painel-dados-base" content="">
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b2a52'/%3E%3Crect x='7' y='16' width='4.5' height='9' rx='1.5' fill='%23eb6834'/%3E%3Crect x='13.75' y='11' width='4.5' height='14' rx='1.5' fill='%232a78d6'/%3E%3Crect x='20.5' y='7' width='4.5' height='18' rx='1.5' fill='%231baf7a'/%3E%3C/svg%3E">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <aside class="barra-lateral">
-        <div class="logo-painel">
-            <h2>Painel ENEM</h2>
+<a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+
+<!-- =====================================================================
+     BARRA LATERAL
+===================================================================== -->
+<aside class="barra-lateral">
+    <div class="logo-painel">
+        <span class="logo-marca" aria-hidden="true">
+            <svg viewBox="0 0 32 32" width="30" height="30">
+                <rect width="32" height="32" rx="8" fill="rgba(255,255,255,.12)"/>
+                <rect x="7" y="16" width="4.5" height="9" rx="1.5" fill="#eb6834"/>
+                <rect x="13.75" y="11" width="4.5" height="14" rx="1.5" fill="#6da7ec"/>
+                <rect x="20.5" y="7" width="4.5" height="18" rx="1.5" fill="#1baf7a"/>
+            </svg>
+        </span>
+        <span class="logo-texto">
+            <strong>Painel ENEM</strong>
+            <small>2019 – 2023</small>
+        </span>
+    </div>
+
+    <nav class="menu-navegacao" aria-label="Seções do painel">
+        <button class="btn-nav ativo" type="button" data-pagina="geral" aria-current="page">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>
+            Estatísticas Gerais
+        </button>
+
+        <button class="btn-nav" type="button" data-pagina="redacao">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            Redações Zeradas
+        </button>
+
+        <button class="btn-nav" type="button" data-pagina="perfil">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            Perfil dos Participantes
+        </button>
+
+        <button class="btn-nav" type="button" data-pagina="desempenho">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            Desempenho
+        </button>
+
+        <button class="btn-nav" type="button" data-pagina="dados">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"></path><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"></path></svg>
+            Sobre os Dados
+        </button>
+    </nav>
+
+    <div class="rodape-lateral">
+        <p class="fonte-dados">
+            Microdados do ENEM<br>
+            <a href="https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/enem"
+               target="_blank" rel="noopener">INEP · Dados Abertos</a>
+        </p>
+        <p class="selo-ambiente" id="seloAmbiente" title="Onde o painel está rodando agora"></p>
+    </div>
+</aside>
+
+<!-- =====================================================================
+     CONTEÚDO
+===================================================================== -->
+<main class="conteudo-principal" id="conteudo">
+
+    <header class="topo">
+        <div class="topo-titulo">
+            <h1>
+                <span id="tituloPagina">Estatísticas Gerais</span>
+                <!-- O ano vem do estado central: é sempre o mesmo que filtra
+                     os dados, não uma segunda cópia a manter em dia. -->
+                <span class="titulo-ano" id="anoDoTitulo">2023</span>
+            </h1>
+            <p class="subtitulo" id="subtituloPagina">
+                Inscrição, presença e validade das redações entre 2019 e 2023.
+            </p>
         </div>
-        <nav class="menu-navegacao">
-            <button class="btn-nav ativo" onclick="alterarPagina('geral')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
-                Estatísticas Gerais
-            </button>
-            <button class="btn-nav" onclick="alterarPagina('redacao')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                Redações Zeradas
-            </button>
-            <button class="btn-nav" onclick="alterarPagina('perfil')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                Perfil dos Participantes
-            </button>
-             
-            <button class="btn-nav" onclick="alterarPagina('desempenho')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                Desempenho
-            </button>
-        </nav>
-    </aside>
 
-    <main class="conteudo-principal">
+        <div class="topo-acoes">
+            <!-- Filtro rápido de ano: o recorte mais trocado do painel, a um
+                 clique e único para todas as abas. -->
+            <div class="controles-ano" id="controlesAno">
+                <span class="controles-ano-rotulo">Ano</span>
+                <div class="seletor-ano" id="seletorAno"></div>
+            </div>
 
-        <div class="filtro-container-wrapper">
-            <button id="btnFiltros" class="btn-filtros-novo" onclick="toggleFiltros()">
-                <svg xmlns="http://www.w3.org/2000/svg" 
-                width="18" 
-                height="18" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                stroke-width="2"
-                stroke-linecap="round" 
-                stroke-linejoin="round">
-                <line  x1="4" y1="21" x2="4" y2="14"></line>
-                <line x1="4" y1="10" x2="4" y2="3"></line>
-                <line x1="12" y1="21" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12" y2="3"></line>
-                <line x1="20" y1="21" x2="20" y2="16"></line>
-                <line x1="20" y1="12" x2="20" y2="3"></line>
-                <line x1="2" y1="14" x2="6" y2="14"></line>
-                <line x1="10" y1="8" x2="14" y2="8"></line>
-                <line x1="18" y1="16" x2="22" y2="16"></line>
-            </svg> 
+            <button class="btn-icone" type="button" id="btnTema"
+                    aria-label="Alternar tema claro e escuro" title="Alternar tema">
+                <svg class="icone-claro" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="5"></line><line x1="12" y1="19" x2="12" y2="22"></line><line x1="2" y1="12" x2="5" y2="12"></line><line x1="19" y1="12" x2="22" y2="12"></line><line x1="4.9" y1="4.9" x2="7" y2="7"></line><line x1="17" y1="17" x2="19.1" y2="19.1"></line><line x1="4.9" y1="19.1" x2="7" y2="17"></line><line x1="17" y1="7" x2="19.1" y2="4.9"></line></svg>
+                <svg class="icone-escuro" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+            </button>
+
+            <button class="btn-filtros" type="button" id="btnFiltros"
+                    aria-expanded="false" aria-haspopup="dialog">
+                <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="2" y1="14" x2="6" y2="14"></line><line x1="10" y1="8" x2="14" y2="8"></line><line x1="18" y1="16" x2="22" y2="16"></line></svg>
                 Filtros
+                <span class="contador-filtros" id="contadorFiltros" hidden>0</span>
             </button>
-
-            <div class="filtros-card" id="menuFiltros">
-                <button class="btn-limpar-filtros" onclick="limparFiltrosAtivos()">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                     width="14" height="14" viewBox="0 0 24 24" fill="none" 
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" 
-                    stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="15" y1="9" x2="9" y2="15"></line>
-                    <line x1="9" y1="9" x2="15" y2="15"></line></svg>
-                    Limpar Filtros
-                </button>
-
-                <div class="filtro-grupo">
-                    <label class="filtro-titulo">Ano</label>
-                    <div class="periodo-flex">
-                        <select id="filtroAno" class="filtro-select-ano"></select>
-                    </div>
-                </div>
-
-                <div class="filtro-grupo">
-                    <label class="filtro-titulo">UF</label>
-                    <div class="checkbox-lista" id="filtroUF"></div>
-                </div>
-
-                <div class="filtro-grupo">
-                    <label class="filtro-titulo">Escola</label>
-                    <div class="checkbox-lista" id="filtroEscola"></div>
-                </div>
-
-                <div class="filtro-grupo">
-                    <label class="filtro-titulo">Dependência</label>
-                    <div class="checkbox-lista" id="filtroDepAdm"></div>
-                </div>
-
-                <div class="filtro-grupo">
-                    <label class="filtro-titulo">Status Redação</label>
-                    <div class="checkbox-lista" id="filtroRedacao"></div>
-                </div>
-
-            </div>
         </div>
+    </header>
 
-        <div id="pagina-geral" class="pagina-view">
-            <h1>Estatísticas Gerais</h1>
+    <!-- Tags do recorte ativo. Aparece só quando há filtro marcado. -->
+    <div class="tags-filtros" id="tagsFiltros" hidden></div>
 
-            <div class="cards">
-                <div class="card">
-                    <h3>Inscritos</h3>
-                    <p id="totalInscritos">0</p>
-                </div>
-                <div class="card">
-                    <h3>Presentes<span class="info" title="Participantes presentes em ambos os dias.">ⓘ</span></h3>
-                    <p id="totalParticipantes">0</p>
-                </div>
-                <div class="card">
-                    <h3>% Presentes<span class="info" title="Porcentagem de participantes presentes em ambos os dias com relação ao total de inscritos.">ⓘ</span></h3>
-                    <p id="percentParticipacao">0%</p>
-                </div>
-                <div class="card">
-                    <h3>% Redações Válidas <span class="info" title="Percentual de redações válidas entre os presentes no primeiro dia.">ⓘ</span></h3>
-                    <p id="percentRedacoesValidas">0%</p>
-                </div>
-                <div class="card">
-                    <h3>Média Participantes por Ano</h3>
-                    <p id="mediaParticipantesAno">0</p>
-                    <small id="notaMediaAnos"></small>
-                </div>
-            </div>
+    <!-- =================================================================
+         PÁGINA 1 — ESTATÍSTICAS GERAIS
+    ================================================================= -->
+    <section id="pagina-geral" class="pagina-view">
 
-            <div class="dashboard-grid">
-                <div class="painel-esquerda">
-                    <div class="grafico-box">
-                        <h2>Evolução de Inscritos e Participantes</h2>
-                        <div id="graficoInscritos" class="grafico"></div>
-                    </div>
-                    <div class="grafico-box">
-                        <h2>Presença e Redações Válidas</h2>
-                        <div id="graficoPresenca" class="grafico"></div>
-                    </div>
-                </div>
+        <div id="indicadoresGeral" class="faixa-indicadores"></div>
 
-                <div class="painel-direita">
-                    <div class="tabela-container">
-                        <h2>Status da Redação</h2>
-                        <table id="tabelaRedacao">
-                            <thead>
-                                <tr>
-                                    <th>Status</th>
-                                    <th>Quantidade</th>
-                                    <th>% Inscritos</th>
-                                        </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
+        <div class="grade">
+            <article class="painel-box col-4">
+                <header class="painel-box-topo">
+                    <h2>Evolução de inscritos e presentes</h2>
+                </header>
+                <div id="graficoInscritos" class="grafico"></div>
+            </article>
+
+            <article class="painel-box col-4">
+                <header class="painel-box-topo">
+                    <h2>Presença por dia e redações válidas</h2>
+                </header>
+                <div id="graficoPresenca" class="grafico"></div>
+            </article>
+
+            <article class="painel-box col-4">
+                <header class="painel-box-topo">
+                    <h2>Status da redação</h2>
+                </header>
+                <div class="tabela-rolagem tabela-alta">
+                    <table id="tabelaRedacao" class="tabela">
+                        <thead>
+                            <tr>
+                                <th scope="col">Status</th>
+                                <th scope="col" class="num">Quantidade</th>
+                                <th scope="col" class="num">% do total</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
-            </div>
+            </article>
         </div>
+    </section>
 
+    <!-- =================================================================
+         PÁGINA 2 — REDAÇÕES ZERADAS
+    ================================================================= -->
+    <section id="pagina-redacao" class="pagina-view" hidden>
 
-<!-- =========================================
-     PÁGINA REDACAO ZERADA
-========================================= -->
+        <div id="indicadoresRedacao" class="faixa-indicadores"></div>
 
-<div id="pagina-redacao"
-     class="pagina-view"
-     style="display: none;">
+        <div class="grade">
+            <article class="painel-box col-4">
+                <header class="painel-box-topo"><h2>Cor/Raça</h2></header>
+                <div id="graficoRacaRedacao" class="grafico"></div>
+            </article>
 
-    <!-- =========================================
-         FILTROS REDACAO
-    ========================================= -->
+            <article class="painel-box col-4">
+                <header class="painel-box-topo"><h2>Faixa Etária</h2></header>
+                <div id="graficoIdadeRedacao" class="grafico"></div>
+            </article>
 
-<div class="filtro-container-wrapper-redacao">
+            <article class="painel-box col-4">
+                <header class="painel-box-topo"><h2>Sexo</h2></header>
+                <div id="graficoSexoRedacao" class="grafico"></div>
+            </article>
 
-    <button id="btnFiltrosRedacao"
-            class="btn-filtros-novo"
-            onclick="toggleFiltrosRedacao()">
+            <article class="painel-box col-4">
+                <header class="painel-box-topo"><h2>Tipo de Escola</h2></header>
+                <div id="tabelaEscolaRedacao" class="corpo-tabela"></div>
+            </article>
 
-        <svg xmlns="http://www.w3.org/2000/svg"
-             width="18"
-             height="18"
-             viewBox="0 0 24 24"
-             fill="none"
-             stroke="currentColor"
-             stroke-width="2"
-             stroke-linecap="round"
-             stroke-linejoin="round">
+            <article class="painel-box col-4">
+                <header class="painel-box-topo"><h2>Dependência Administrativa</h2></header>
+                <div id="tabelaDepAdmRedacao" class="corpo-tabela"></div>
+            </article>
 
-            <line x1="4" y1="21" x2="4" y2="14"></line>
-            <line x1="4" y1="10" x2="4" y2="3"></line>
+            <article class="painel-box col-4">
+                <header class="painel-box-topo"><h2>Situação de Conclusão</h2></header>
+                <div id="tabelaConclusaoRedacao" class="corpo-tabela"></div>
+            </article>
+        </div>
+    </section>
 
-            <line x1="12" y1="21" x2="12" y2="12"></line>
-            <line x1="12" y1="8" x2="12" y2="3"></line>
+    <!-- =================================================================
+         PÁGINA 3 — PERFIL DOS PARTICIPANTES
+    ================================================================= -->
+    <section id="pagina-perfil" class="pagina-view" hidden>
 
-            <line x1="20" y1="21" x2="20" y2="16"></line>
-            <line x1="20" y1="12" x2="20" y2="3"></line>
+        <div id="indicadoresPerfil" class="faixa-indicadores"></div>
 
-            <line x1="2" y1="14" x2="6" y2="14"></line>
-            <line x1="10" y1="8" x2="14" y2="8"></line>
-            <line x1="18" y1="16" x2="22" y2="16"></line>
+        <div class="grade">
+            <article class="painel-box col-4">
+                <header class="painel-box-topo"><h2>Cor/Raça</h2></header>
+                <div id="graficoRaca" class="grafico"></div>
+            </article>
 
-        </svg>
+            <article class="painel-box col-4">
+                <header class="painel-box-topo"><h2>Faixa Etária</h2></header>
+                <div id="graficoIdade" class="grafico"></div>
+            </article>
 
-        Filtros
+            <article class="painel-box col-4">
+                <header class="painel-box-topo"><h2>Sexo</h2></header>
+                <div id="graficoSexo" class="grafico"></div>
+            </article>
 
-    </button>
+            <article class="painel-box col-4">
+                <header class="painel-box-topo"><h2>Tipo de Escola</h2></header>
+                <div id="tabelaEscola" class="corpo-tabela"></div>
+            </article>
 
-    <div class="filtros-card filtros-card-redacao"
-         id="menuFiltrosRedacao">
+            <article class="painel-box col-4">
+                <header class="painel-box-topo"><h2>Dependência Administrativa</h2></header>
+                <div id="tabelaDepAdm" class="corpo-tabela"></div>
+            </article>
 
-        <button class="btn-limpar-filtros"
-                onclick="limparFiltrosRedacao()">
+            <article class="painel-box col-4">
+                <header class="painel-box-topo"><h2>Situação de Conclusão</h2></header>
+                <div id="tabelaConclusao" class="corpo-tabela"></div>
+            </article>
+        </div>
+    </section>
 
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="14"
-                 height="14"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round">
+    <!-- =================================================================
+         PÁGINA 4 — DESEMPENHO
+    ================================================================= -->
+    <section id="pagina-desempenho" class="pagina-view" hidden>
 
-                <circle cx="12" cy="12" r="10"></circle>
+        <div id="indicadoresDesempenho" class="faixa-indicadores"></div>
 
-                <line x1="15" y1="9"
-                      x2="9" y2="15"></line>
+        <div class="painel-box faixa-medias">
+            <header class="painel-box-topo">
+                <h2>Nota média por área da prova</h2>
 
-                <line x1="9" y1="9"
-                      x2="15" y2="15"></line>
-
-            </svg>
-
-            Limpar Filtros
-
-        </button>
-
-            <!-- ANO -->
-
-            <div class="filtro-grupo">
-
-                <label  class="filtro-titulo">
-                    Ano
-                </label >
-
-                <select id="filtroAnoRedacao"
-                        class="filtro-select-ano">
-                </select>
-
-            </div>
-
-            <!-- UF -->
-
-            <div class="filtro-grupo">
-                <label class="filtro-titulo">
-                    UF
+                <!-- A área de conhecimento não recorta a população: troca a
+                     métrica analisada. Por isso fica visível, ao lado dos
+                     gráficos que ela governa, e não na gaveta de filtros. -->
+                <label class="campo-area">
+                    <span>Área analisada</span>
+                    <select id="seletorArea" class="select-compacto"></select>
                 </label>
-
-                <div id="filtroUFRedacao"
-                    class="checkbox-lista">
-                </div>
-            </div>
-
-        <!-- STATUS REDAÇÃO -->
-
-            <div class="filtro-grupo">
-                <label class="filtro-titulo">
-                    Status da Redação
-                </label>
-
-                <div id="filtroStatusRedacao"
-                    class="checkbox-lista">
-                </div>
-            </div>
-
-            
-            <!-- SEXO -->
-
-            <div class="filtro-grupo">
-
-                <label  class="filtro-titulo">
-                    Sexo
-                </label >
-
-                <div id="filtroSexoRedacao"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- RAÇA -->
-
-            <div class="filtro-grupo">
-
-                <label   class="filtro-titulo">
-                    Cor/Raça
-                </label >
-
-                <div id="filtroRacaRedacao"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-             <!-- ESTADO CIVIL -->
-
-            <div class="filtro-grupo">
-
-                <label   class="filtro-titulo">
-                    Estado Civil
-                </label >
-
-                <div id="filtroEstadocivilRedacao"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- FAIXA ETÁRIA -->
-
-            <div class="filtro-grupo">
-
-                <label  class="filtro-titulo">
-                    Faixa Etária
-                </label >
-
-                <div id="filtroFaixaRedacao"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- CONCLUSÃO -->
-
-            <div class="filtro-grupo">
-
-                <label  class="filtro-titulo">
-                    Situação de Conclusão
-                </label >
-
-                <div id="filtroConclusaoRedacao"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- ESCOLA -->
-
-            <div class="filtro-grupo">
-
-                <label  class="filtro-titulo">
-                    Tipo Escola
-                </label >
-
-                <div id="filtroEscolaRedacao"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- DEP ADM -->
-
-            <div class="filtro-grupo">
-
-                <label class="filtro-titulo">
-                    Dependência Adm
-                </label>
-
-                <div id="filtroDepAdmRedacao"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- TREINEIRO -->
-
-            <div class="filtro-grupo">
-
-                <label class="filtro-titulo">
-                    Treineiro
-                </label>
-
-                <div id="filtroTreineiroRedacao"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- ESCOLARIDADE MÃE -->
-
-            <div class="filtro-grupo">
-
-                <label  class="filtro-titulo">
-                    Escolaridade Mãe
-                </label>
-
-                <div id="filtroMaeRedacao"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- RENDA -->
-
-            <div class="filtro-grupo">
-
-                <label class="filtro-titulo">
-                    Renda
-                </label>
-
-                <div id="filtroRendaRedacao"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- INTERNET -->
-
-            <div class="filtro-grupo">
-
-                <label  class="filtro-titulo">
-                    Internet
-                </label >
-
-                <div id="filtroInternetRedacao"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
+            </header>
+            <div id="mediasPorArea" class="medias-areas"></div>
         </div>
 
-    </div>
+        <div class="grade">
+            <article class="painel-box col-4">
+                <header class="painel-box-topo"><h2>Densidade de desempenho</h2></header>
+                <div id="graficoDensidade" class="grafico"></div>
+            </article>
 
-    <!-- =========================================
-         TÍTULO
-    ========================================= -->
+            <article class="painel-box col-4">
+                <header class="painel-box-topo"><h2>Densidade por dependência</h2></header>
+                <div id="graficoDensidadeDepAdm" class="grafico"></div>
+            </article>
 
-    <h1>
-        Perfil dos Participantes com Redação Zerada
-    </h1>
+            <article class="painel-box col-4">
+                <header class="painel-box-topo"><h2>Nota média por área e ano</h2></header>
+                <div id="graficoNotaMediaAno" class="grafico"></div>
+            </article>
 
-    <!-- =========================================
-         CARDS
-    ========================================= -->
+            <article class="painel-box col-6">
+                <header class="painel-box-topo"><h2>Redações nota 1000 por estado</h2></header>
+                <div class="tabela-rolagem tabela-media">
+                    <table id="tabelaEstadosRedacoes1000" class="tabela">
+                        <thead>
+                            <tr>
+                                <th scope="col">UF</th>
+                                <th scope="col" class="num">Redações 1000</th>
+                                <th scope="col" class="num">% do total</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </article>
 
-    <div class="cards">
-
-        <div class="card">
-            <h3>Redações Zeradas<span class="info" title="Redações Realizadas mas Não Válidas">ⓘ</span></h3>
-            <p id="cardParticipantesRedacao"></p>
+            <article class="painel-box col-6">
+                <header class="painel-box-topo">
+                    <h2>Ano de conclusão do Ensino Médio × proficiência</h2>
+                </header>
+                <div class="tabela-rolagem tabela-media">
+                    <table id="tabelaConclusaoProficiencia" class="tabela">
+                        <thead>
+                            <tr>
+                                <th scope="col">Ano de Conclusão</th>
+                                <th scope="col" class="num">Participantes</th>
+                                <th scope="col" class="num">% Proficiência</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </article>
         </div>
+    </section>
 
-        <div class="card">
-            <h3>Último Ano</h3>
-            <p id="cardUltimoAnoRedacao"></p>
+    <!-- =================================================================
+         PÁGINA 5 — SOBRE OS DADOS
+    ================================================================= -->
+    <section id="pagina-dados" class="pagina-view" hidden>
+
+        <div class="grade">
+
+            <article class="painel-box col-4 prosa">
+                <header class="painel-box-topo"><h2>Origem</h2></header>
+                <p>
+                    Os números deste painel vêm dos <strong>microdados públicos do ENEM</strong>,
+                    publicados pelo INEP, das edições de <strong>2019 a 2023</strong>. Cada edição
+                    original é um CSV de vários gigabytes, com uma linha por participante inscrito
+                    e mais de uma centena de colunas.
+                </p>
+                <p>
+                    Esses arquivos foram tratados fora do navegador e gravados em
+                    <strong>Parquet</strong>, um formato colunar comprimido. O painel consulta os
+                    Parquet diretamente pelo navegador, com DuckDB compilado para WebAssembly —
+                    não existe banco de dados nem servidor de aplicação por trás.
+                </p>
+            </article>
+
+            <article class="painel-box col-4 prosa">
+                <header class="painel-box-topo"><h2>Limpeza aplicada</h2></header>
+                <ul class="lista-marcada">
+                    <li>Seleção das colunas efetivamente usadas, das mais de 100 originais.</li>
+                    <li>Recodificação de <code>TP_ESCOLA</code> e <code>TP_DEPENDENCIA_ADM_ESC</code>
+                        em <code>tipo_escola</code> e <code>dep_adm</code>.</li>
+                    <li>Padronização da UF de aplicação da prova em <code>estado_prova</code>.</li>
+                    <li>Consolidação das respostas do questionário socioeconômico em
+                        <code>escolaridade_mae</code>, <code>renda_familiar</code> e
+                        <code>internet</code>.</li>
+                    <li>Agregações prontas para a página Geral em <code>GERAL.csv</code>
+                        e <code>REDACAO.csv</code>.</li>
+                </ul>
+            </article>
+
+            <article class="painel-box col-4 prosa">
+                <header class="painel-box-topo"><h2>Como ler os indicadores</h2></header>
+                <dl class="lista-definicao">
+                    <dt>Presentes</dt>
+                    <dd>Participantes presentes nos dois dias de prova.</dd>
+                    <dt>Redação válida</dt>
+                    <dd>Redação corrigida e pontuada — exclui anuladas, em branco, fuga ao tema
+                        e demais motivos de zero.</dd>
+                    <dt>Proficiência</dt>
+                    <dd>Nota ≥ 450 em cada uma das quatro áreas objetivas <em>e</em> ≥ 500 na
+                        redação, simultaneamente. É um recorte definido por este painel, não uma
+                        classificação oficial do INEP.</dd>
+                    <dt>Treineiro</dt>
+                    <dd>Quem fez a prova sem intenção de usar a nota no ano corrente.</dd>
+                </dl>
+            </article>
+
+            <article class="painel-box col-6">
+                <header class="painel-box-topo"><h2>Arquivos publicados</h2></header>
+                <div class="tabela-rolagem">
+                    <table class="tabela tabela-texto">
+                        <thead>
+                            <tr>
+                                <th scope="col">Arquivo</th>
+                                <th scope="col">Conteúdo</th>
+                                <th scope="col">Granularidade</th>
+                                <th scope="col">Usado em</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>ENEM_2019…2023.parquet</code></td>
+                                <td>Microdados tratados, uma linha por participante</td>
+                                <td>Individual</td>
+                                <td>Perfil, Desempenho</td>
+                            </tr>
+                            <tr>
+                                <td><code>GERAL.csv</code></td>
+                                <td>Inscritos, presença por dia e redações válidas</td>
+                                <td>Ano × UF × escola × dependência × status</td>
+                                <td>Estatísticas Gerais</td>
+                            </tr>
+                            <tr>
+                                <td><code>REDACAO.csv</code></td>
+                                <td>Contagem por motivo de status da redação</td>
+                                <td>Ano × UF × escola × dependência × status</td>
+                                <td>Estatísticas Gerais</td>
+                            </tr>
+                            <tr>
+                                <td><code>redacao_zerada_total.csv</code></td>
+                                <td>Participantes com redação zerada</td>
+                                <td>Individual</td>
+                                <td>Redações Zeradas</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+
+            <article class="painel-box col-6 prosa">
+                <header class="painel-box-topo"><h2>Ambiente e limitações</h2></header>
+                <p id="textoAmbiente" class="destaque-ambiente"></p>
+                <ul class="lista-marcada">
+                    <li>As páginas <strong>Perfil</strong> e <strong>Desempenho</strong> só carregam
+                        quando abertas, e leem apenas as colunas necessárias de cada Parquet.</li>
+                    <li>A base de <strong>redações zeradas</strong> é carregada uma vez por sessão
+                        para dentro do DuckDB; a partir daí os filtros não geram novo download.</li>
+                    <li>Aberto direto do disco (<code>file://</code>) o navegador bloqueia a leitura
+                        da pasta <code>dados/</code>; é preciso um servidor HTTP.</li>
+                    <li>Servidores sem suporte a requisições parciais (<em>Range</em>) forçam o
+                        download do Parquet inteiro. O GitHub Pages tem suporte;
+                        <code>python -m http.server</code> não tem.</li>
+                    <li>Os percentuais são calculados sobre o recorte filtrado, não sobre o total
+                        nacional.</li>
+                </ul>
+            </article>
         </div>
+    </section>
 
-        <div class="card">
-            <h3>Treineiros</h3>
-            <p id="cardTreineirosRedacao"></p>
-        </div>
-
-        <div class="card">
-            <h3>Faixa Etária Mais Comum</h3>
-            <p id="cardIdadeRedacao"></p>
-        </div>
-        
-
-
-</div> <div class="dashboard-grid-perfil">
-    
-    <div class="painel-coluna">
-        <div class="tabela-container-mini">
-            <h3>Distribuição por Escola</h3>
-            <div id="tabelaEscolaRedacao"></div>
-        </div>
-        
-        <div class="tabela-container-mini" style="margin-top: 10px;">
-            <h3>Distribuição por Dependência</h3>
-            <div id="tabelaDepAdmRedacao"></div>
-        </div>
-    </div>
-
-    <div class="painel-coluna">
-        <div class="grafico-container-pequeno">
-            <h3>Cor/Raça</h3>
-            <div id="graficoRacaRedacao"></div>
-        </div>
-        
-        <div class="tabela-container-mini" style="margin-top: 10px;">
-            <h3>Situação de Conclusão</h3>
-            <div id="tabelaConclusaoRedacao"></div>
-        </div>
-    </div>
-
-    <div class="painel-coluna">
-        <div class="grafico-container-pequeno">
-            <h3>Proporção por Sexo</h3>
-            <div id="graficoSexoRedacao"></div>
-        </div>
-        
-        <div class="grafico-container-medio" style="margin-top: 10px;">
-            <h3>Faixa Etária</h3>
-            <div id="graficoIdadeRedacao"></div>
-        </div>
-    </div>
-          
-</div>
-</div>
-
-<!-- =========================================
-     PÁGINA PERFIL
-========================================= -->
-
-<div id="pagina-perfil"
-     class="pagina-view"
-     style="display: none;">
-
-    <!-- =========================================
-         FILTROS PERFIL
-    ========================================= -->
-
-<div class="filtro-container-wrapper-perfil">
-
-    <button id="btnFiltrosPerfil"
-            class="btn-filtros-novo"
-            onclick="toggleFiltrosPerfil()">
-
-        <svg xmlns="http://www.w3.org/2000/svg"
-             width="18"
-             height="18"
-             viewBox="0 0 24 24"
-             fill="none"
-             stroke="currentColor"
-             stroke-width="2"
-             stroke-linecap="round"
-             stroke-linejoin="round">
-
-            <line x1="4" y1="21" x2="4" y2="14"></line>
-            <line x1="4" y1="10" x2="4" y2="3"></line>
-
-            <line x1="12" y1="21" x2="12" y2="12"></line>
-            <line x1="12" y1="8" x2="12" y2="3"></line>
-
-            <line x1="20" y1="21" x2="20" y2="16"></line>
-            <line x1="20" y1="12" x2="20" y2="3"></line>
-
-            <line x1="2" y1="14" x2="6" y2="14"></line>
-            <line x1="10" y1="8" x2="14" y2="8"></line>
-            <line x1="18" y1="16" x2="22" y2="16"></line>
-
-        </svg>
-
-        Filtros
-
-    </button>
-
-    <div class="filtros-card filtros-card-perfil"
-         id="menuFiltrosPerfil">
-
-        <button class="btn-limpar-filtros"
-                onclick="limparFiltrosPerfil()">
-
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="14"
-                 height="14"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round">
-
-                <circle cx="12" cy="12" r="10"></circle>
-
-                <line x1="15" y1="9"
-                      x2="9" y2="15"></line>
-
-                <line x1="9" y1="9"
-                      x2="15" y2="15"></line>
-
-            </svg>
-
-            Limpar Filtros
-
-        </button>
-
-            <!-- ANO -->
-
-            <div class="filtro-grupo">
-
-                <label  class="filtro-titulo">
-                    Ano
-                </label >
-
-                <select id="filtroAnoPerfil"
-                        class="filtro-select-ano">
-                </select>
-
-            </div>
-
-            <!-- UF -->
-
-            <div class="filtro-grupo">
-
-                <label  class="filtro-titulo">
-                    UF
-                </label >
-
-                <div id="filtroUFPerfil"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- SEXO -->
-
-            <div class="filtro-grupo">
-
-                <label  class="filtro-titulo">
-                    Sexo
-                </label >
-
-                <div id="filtroSexoPerfil"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- RAÇA -->
-
-            <div class="filtro-grupo">
-
-                <label   class="filtro-titulo">
-                    Cor/Raça
-                </label >
-
-                <div id="filtroRacaPerfil"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-             <!-- ESTADO CIVIL -->
-
-            <div class="filtro-grupo">
-
-                <label   class="filtro-titulo">
-                    Estado Civil
-                </label >
-
-                <div id="filtroEstadocivilPerfil"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- FAIXA ETÁRIA -->
-
-            <div class="filtro-grupo">
-
-                <label  class="filtro-titulo">
-                    Faixa Etária
-                </label >
-
-                <div id="filtroFaixaPerfil"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- CONCLUSÃO -->
-
-            <div class="filtro-grupo">
-
-                <label  class="filtro-titulo">
-                    Situação de Conclusão
-                </label >
-
-                <div id="filtroConclusaoPerfil"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- ESCOLA -->
-
-            <div class="filtro-grupo">
-
-                <label  class="filtro-titulo">
-                    Tipo Escola
-                </label >
-
-                <div id="filtroEscolaPerfil"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- DEP ADM -->
-
-            <div class="filtro-grupo">
-
-                <label class="filtro-titulo">
-                    Dependência Adm
-                </label>
-
-                <div id="filtroDepAdmPerfil"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- TREINEIRO -->
-
-            <div class="filtro-grupo">
-
-                <label class="filtro-titulo">
-                    Treineiro
-                </label>
-
-                <div id="filtroTreineiroPerfil"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- ESCOLARIDADE MÃE -->
-
-            <div class="filtro-grupo">
-
-                <label  class="filtro-titulo">
-                    Escolaridade Mãe
-                </label>
-
-                <div id="filtroMaePerfil"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- RENDA -->
-
-            <div class="filtro-grupo">
-
-                <label class="filtro-titulo">
-                    Renda
-                </label>
-
-                <div id="filtroRendaPerfil"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-            <!-- INTERNET -->
-
-            <div class="filtro-grupo">
-
-                <label  class="filtro-titulo">
-                    Internet
-                </label >
-
-                <div id="filtroInternetPerfil"
-                     class="checkbox-lista">
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- =========================================
-         TÍTULO
-    ========================================= -->
-
-    <h1>
-        Perfil dos Participantes Presentes
-    </h1>
-
-    <!-- =========================================
-         CARDS
-    ========================================= -->
-
-    <div class="cards">
-
-        <div class="card">
-            <h3>Participantes<span class="info" title="Presentes com notas maiores que zero">ⓘ</span></h3>
-            <p id="cardParticipantesPerfil"></p>
-        </div>
-
-        <div class="card">
-            <h3>Último Ano</h3>
-            <p id="cardUltimoAnoPerfil"></p>
-        </div>
-
-        <div class="card">
-            <h3>Treineiros</h3>
-            <p id="cardTreineirosPerfil"></p>
-        </div>
-
-        <div class="card">
-            <h3>Faixa Etária Mais Comum</h3>
-            <p id="cardIdadePerfil"></p>
-        </div>
-        
-</div><div class="dashboard-grid-perfil">
-    
-    <div class="painel-coluna">
-        <div class="tabela-container-mini">
-            <h3>Distribuição por Escola</h3>
-            <div id="tabelaEscola"></div>
-        </div>
-        
-        <div class="tabela-container-mini" style="margin-top: 10px;">
-            <h3>Distribuição por Dependência</h3>
-            <div id="tabelaDepAdm"></div>
-        </div>
-    </div>
-
-    <div class="painel-coluna">
-        <div class="grafico-container-pequeno">
-            <h3>Cor/Raça</h3>
-            <div id="graficoRaca"></div>
-        </div>
-        
-        <div class="tabela-container-mini" style="margin-top: 10px;">
-            <h3>Situação de Conclusão</h3>
-            <div id="tabelaConclusao"></div>
-        </div>
-    </div>
-
-    <div class="painel-coluna">
-        <div class="grafico-container-pequeno">
-            <h3>Proporção por Sexo</h3>
-            <div id="graficoSexo"></div>
-        </div>
-        
-        <div class="grafico-container-medio" style="margin-top: 10px;">
-            <h3>Faixa Etária</h3>
-            <div id="graficoIdade"></div>
-        </div>
-    </div>
-          
-</div>
-
-</div></main>
-
-<!-- =========================================
-     PÁGINA DESEMPENHO
-========================================= -->
- 
-<div id="pagina-desempenho"
-     class="pagina-view"
-     style="display: none;">
- 
-    <!-- =========================================
-         FILTROS DESEMPENHO
-    ========================================= -->
- 
-<div class="filtro-container-wrapper-desempenho">
- 
-    <button id="btnFiltrosDesempenho"
-            class="btn-filtros-novo"
-            onclick="toggleFiltrosDesempenho()">
- 
-        <svg xmlns="http://www.w3.org/2000/svg"
-             width="18"
-             height="18"
-             viewBox="0 0 24 24"
-             fill="none"
-             stroke="currentColor"
-             stroke-width="2"
-             stroke-linecap="round"
-             stroke-linejoin="round">
- 
-            <line x1="4" y1="21" x2="4" y2="14"></line>
-            <line x1="4" y1="10" x2="4" y2="3"></line>
- 
-            <line x1="12" y1="21" x2="12" y2="12"></line>
-            <line x1="12" y1="8" x2="12" y2="3"></line>
- 
-            <line x1="20" y1="21" x2="20" y2="16"></line>
-            <line x1="20" y1="12" x2="20" y2="3"></line>
- 
-            <line x1="2" y1="14" x2="6" y2="14"></line>
-            <line x1="10" y1="8" x2="14" y2="8"></line>
-            <line x1="18" y1="16" x2="22" y2="16"></line>
- 
-        </svg>
- 
-        Filtros
- 
-    </button>
- 
-    <div class="filtros-card filtros-card-desempenho"
-         id="menuFiltrosDesempenho">
- 
-        <button class="btn-limpar-filtros"
-                onclick="limparFiltrosDesempenho()">
- 
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="14"
-                 height="14"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round">
- 
-                <circle cx="12" cy="12" r="10"></circle>
- 
-                <line x1="15" y1="9"
-                      x2="9" y2="15"></line>
- 
-                <line x1="9" y1="9"
-                      x2="15" y2="15"></line>
- 
-            </svg>
- 
-            Limpar Filtros
- 
-        </button>
- 
-        <!-- ÁREA DE CONHECIMENTO -->
-            <div class="filtro-grupo">
-                <label class="filtro-titulo">Área de Conhecimento</label>
-                <select id="filtroAreaDesempenho" class="filtro-select">
-                    <option value="GERAL" selected>Média Geral (5 Áreas)</option>
-                    <option value="NU_NOTA_CN">Ciências da Natureza</option>
-                    <option value="NU_NOTA_CH">Ciências Humanas</option>
-                    <option value="NU_NOTA_LC">Linguagens e Códigos</option>
-                    <option value="NU_NOTA_MT">Matemática</option>
-                    <option value="NU_NOTA_REDACAO">Redação</option>
-                </select>
-            </div>
-
-            <!-- ANO -->
- 
-            <div class="filtro-grupo">
- 
-                <label  class="filtro-titulo">
-                    Ano
-                </label >
- 
-                <select id="filtroAnoDesempenho"
-                        class="filtro-select-ano">
-                </select>
- 
-            </div>
- 
-            <!-- UF -->
- 
-            <div class="filtro-grupo">
- 
-                <label  class="filtro-titulo">
-                    UF
-                </label >
- 
-                <div id="filtroUFDesempenho"
-                     class="checkbox-lista">
-                </div>
- 
-            </div>
- 
-            <!-- SEXO -->
- 
-            <div class="filtro-grupo">
- 
-                <label  class="filtro-titulo">
-                    Sexo
-                </label >
- 
-                <div id="filtroSexoDesempenho"
-                     class="checkbox-lista">
-                </div>
- 
-            </div>
- 
-            <!-- RAÇA -->
- 
-            <div class="filtro-grupo">
- 
-                <label   class="filtro-titulo">
-                    Cor/Raça
-                </label >
- 
-                <div id="filtroRacaDesempenho"
-                     class="checkbox-lista">
-                </div>
- 
-            </div>
- 
-             <!-- ESTADO CIVIL -->
- 
-            <div class="filtro-grupo">
- 
-                <label   class="filtro-titulo">
-                    Estado Civil
-                </label >
- 
-                <div id="filtroEstadocivilDesempenho"
-                     class="checkbox-lista">
-                </div>
- 
-            </div>
- 
-            <!-- FAIXA ETÁRIA -->
- 
-            <div class="filtro-grupo">
- 
-                <label  class="filtro-titulo">
-                    Faixa Etária
-                </label >
- 
-                <div id="filtroFaixaDesempenho"
-                     class="checkbox-lista">
-                </div>
- 
-            </div>
- 
-            <!-- CONCLUSÃO -->
- 
-            <div class="filtro-grupo">
- 
-                <label  class="filtro-titulo">
-                    Situação de Conclusão
-                </label >
- 
-                <div id="filtroConclusaoDesempenho"
-                     class="checkbox-lista">
-                </div>
- 
-            </div>
- 
-            <!-- ESCOLA -->
- 
-            <div class="filtro-grupo">
- 
-                <label  class="filtro-titulo">
-                    Tipo Escola
-                </label >
- 
-                <div id="filtroEscolaDesempenho"
-                     class="checkbox-lista">
-                </div>
- 
-            </div>
- 
-            <!-- DEP ADM -->
- 
-            <div class="filtro-grupo">
- 
-                <label class="filtro-titulo">
-                    Dependência Adm
-                </label>
- 
-                <div id="filtroDepAdmDesempenho"
-                     class="checkbox-lista">
-                </div>
- 
-            </div>
- 
-            <!-- TREINEIRO -->
- 
-            <div class="filtro-grupo">
- 
-                <label class="filtro-titulo">
-                    Treineiro
-                </label>
- 
-                <div id="filtroTreineiroDesempenho"
-                     class="checkbox-lista">
-                </div>
- 
-            </div>
- 
-            <!-- ESCOLARIDADE MÃE -->
- 
-            <div class="filtro-grupo">
- 
-                <label  class="filtro-titulo">
-                    Escolaridade Mãe
-                </label>
- 
-                <div id="filtroMaeDesempenho"
-                     class="checkbox-lista">
-                </div>
- 
-            </div>
- 
-            <!-- RENDA -->
- 
-            <div class="filtro-grupo">
- 
-                <label class="filtro-titulo">
-                    Renda
-                </label>
- 
-                <div id="filtroRendaDesempenho"
-                     class="checkbox-lista">
-                </div>
- 
-            </div>
- 
-            <!-- INTERNET -->
- 
-            <div class="filtro-grupo">
- 
-                <label  class="filtro-titulo">
-                    Internet
-                </label >
- 
-                <div id="filtroInternetDesempenho"
-                     class="checkbox-lista">
-                </div>
- 
-            </div>
- 
-        </div>
- 
-    </div>
- 
-    <!-- =========================================
-         TÍTULO
-    ========================================= -->
- 
-    <h1>
-        Desempenho
-    </h1>
- 
- <!-- =========================================
-         GRADE PRINCIPAL
-    ========================================= -->
-
-    <div class="dashboard-grid-perfil">
-
-        <!-- =========================================
-             COLUNA 1: ESQUERDA
-        ========================================= -->
-        <div class="painel-coluna">
-            <!-- 2 Cards Numéricos em Dupla (Lado a Lado) -->
-            <div class="cards-dupla-desempenho">
-                <div class="card">
-                    <h3>Redações 1000</h3>
-                    <p id="cardRedacoes1000Desempenho">0</p>
-                </div>
-                <div class="card">
-                    <h3>% Proficiência<span class="info" title="Porcentagem dos participantes com nota >= 450 em cada uma das 4 áreas e nota >= 500 na redação, simultaneamente.">ⓘ</span></h3>
-                    <p id="cardProficienciaDesempenho">0%</p>
-                </div>
-            </div>
-
-            <!-- Gráfico Curva de Densidade -->
-            <div class="grafico-container-pequeno" style="margin-top: 10px;">
-                <h3>Curva de Densidade do Desempenho</h3>
-                <div id="graficoDensidadeDesempenho"></div>
-            </div>
-
-        
-           <!-- Tabela Redações 1000 por Estado (Multi-coluna) -->
-            <div class="tabela-container-mini" style="margin-top: 10px;">
-                <h3>Redações Nota 1000 por Estado</h3>
-                <table id="tabelaEstadosRedacoes1000Desempenho" class="tabela-mini">
-                    <thead>
-                        <tr>
-                            <th>UF</th>
-                            <th>Nº</th>
-                            <th>UF</th>
-                            <th>Nº</th>
-                            <th>UF</th>
-                            <th>Nº</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-    </div>
-        <!-- =========================================
-             COLUNA 2: MEIO
-        ========================================= -->
-        <div class="painel-coluna">
-            <!-- Tabela de Média por Área -->
-            <div class="tabela-container-mini card-tabela-media">
-                <h3>Média por Área da Prova</h3>
-                <div id="tabelaMediaAreasDesempenho"></div>
-            </div>
-
-            <!-- Gráfico Densidade por Dependência -->
-            <div class="grafico-container-pequeno" style="margin-top: 10px;">
-                <h3>Densidade por Dep. Administrativa</h3>
-                <div id="graficoDensidadeDepAdmDesempenho"></div>
-            </div>
-
-            <!-- Gráfico Nota Média por Ano -->
-            <div class="grafico-container-pequeno" style="margin-top: 10px;">
-                <h3>Nota Média por Área e Ano</h3>
-                <div id="graficoNotaMediaAnoDesempenho"></div>
-            </div>
-        </div>
-
-        <!-- =========================================
-             COLUNA 3: DIREITA (INTEIRA COM A TABELA)
-        ========================================= -->
-        <div class="painel-coluna">
-            <div class="tabela-container-mini" style="height: 100% !important;">
-                <h3>Conclusão do Ensino Médio x Proficiência</h3>
-                <table id="tabelaConclusaoProficienciaDesempenho" class="tabela-mini">
-                    <thead>
-                        <tr>
-                            <th>Ano Conclusão</th>
-                            <th>Nº Participantes</th>
-                            <th>% Proficiência</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>
- 
-</div>
 </main>
- 
-<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+<div class="fundo-drawer" id="fundoDrawer" hidden></div>
+
+<!-- =====================================================================
+     SCRIPTS
+
+     Plotly e PapaParse são bibliotecas globais de CDN. Todo o código do
+     painel entra por src/app.js, que importa o resto na ordem correta.
+===================================================================== -->
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
- 
- 
-<script src="js/filtros.js"></script>
-<script src="js/cards.js"></script>
- 
- 
- 
-<script src="js/graficos.js"></script>
-<script src="js/tabelas.js"></script>
- 
- 
-<script type="module" src="js/desempenho.js"></script>
-<script type="module" src="js/perfil.js"></script>
-<script src="js/redacao.js"></script>
-<script src="script.js"></script>
- 
+
+<script type="module" src="src/app.js"></script>
+
 </body>
 </html>
-  
-
