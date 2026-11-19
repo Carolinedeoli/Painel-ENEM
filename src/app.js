@@ -25,6 +25,7 @@ import * as redacao from "./paginas/redacao.js";
 import * as perfil from "./paginas/perfil.js";
 import * as desempenho from "./paginas/desempenho.js";
 import * as comparacao from "./paginas/comparacao.js";
+import * as desigualdades from "./paginas/desigualdades.js";
 
 const PAGINAS = {
     geral: {
@@ -51,6 +52,11 @@ const PAGINAS = {
         iniciar: comparacao.iniciar,
         titulo: "Comparação entre Grupos",
         subtitulo: "Distribuições, estatísticas descritivas e testes de comparação de médias."
+    },
+    desigualdades: {
+        iniciar: desigualdades.iniciar,
+        titulo: "Desigualdades Educacionais",
+        subtitulo: "Cruze duas características socioeconômicas e explore diferenças de desempenho entre grupos."
     },
     dados: {
         titulo: "Sobre os Dados",

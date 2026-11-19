@@ -1,0 +1,55 @@
+/* Desigualdades Educacionais: classes isoladas da nova página. */
+#pagina-desigualdades { --de-gap: 12px; }
+#pagina-desigualdades .de-controles { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:4px 0 12px; padding:15px; }
+#pagina-desigualdades .de-controles label, #pagina-desigualdades .de-estratos-controles label { display:flex; flex-direction:column; gap:6px; color:var(--tinta-2); font-size:12px; font-weight:600; }
+#pagina-desigualdades select { width:100%; min-width:0; border:1px solid var(--borda-forte); background:var(--superficie); color:var(--tinta); border-radius:9px; padding:9px; font:inherit; }
+#pagina-desigualdades .de-aviso { font-size:12px; color:var(--tinta-2); margin:0 0 10px; }
+#pagina-desigualdades .de-aviso:empty { display:none; }
+#pagina-desigualdades .de-resumo { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:8px 0 12px; }
+#pagina-desigualdades .de-mini { background:var(--superficie); border:1px solid var(--borda); border-radius:var(--raio); padding:14px 16px; min-width:0; }
+#pagina-desigualdades .de-mini small { display:block; color:var(--tinta-3); font-size:11px; text-transform:uppercase; letter-spacing:.025em; }
+#pagina-desigualdades .de-mini strong { display:block; margin-top:6px; font-size:23px; font-weight:700; font-variant-numeric:tabular-nums; }
+#pagina-desigualdades .de-mini .de-info { color:var(--tinta-3); font-size:11px; display:block; margin-top:6px; }
+#pagina-desigualdades .de-duas { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(310px,1fr); gap:12px; margin:12px 0; align-items:stretch; }
+#pagina-desigualdades .de-caixa { background:var(--superficie); border:1px solid var(--borda); border-radius:var(--raio); padding:16px; min-width:0; box-shadow:var(--sombra-1); }
+#pagina-desigualdades .de-caixa h2 { font-size:15px; margin:0; }
+#pagina-desigualdades .de-cabecalho { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:8px; }
+#pagina-desigualdades .de-cabecalho label { font-size:12px; color:var(--tinta-2); display:flex; gap:6px; align-items:center; }
+#pagina-desigualdades .de-cabecalho select { width:auto; max-width:200px; }
+#pagina-desigualdades #deMapa, #pagina-desigualdades #deEstratos { width:100%; min-height:340px; }
+#pagina-desigualdades .de-nota { font-size:11px; color:var(--tinta-3); line-height:1.5; margin:8px 0 0; }
+#pagina-desigualdades .de-estratos-controles { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; padding:12px; background:var(--superficie-2); border-radius:9px; margin:10px 0; }
+#pagina-desigualdades .de-tabela-rolagem { overflow:auto; max-height:590px; }
+#pagina-desigualdades table { width:100%; border-collapse:collapse; font-size:12px; }
+#pagina-desigualdades th { background:var(--superficie-2); position:sticky; top:0; z-index:1; text-align:left; white-space:nowrap; color:var(--tinta-2); }
+#pagina-desigualdades th, #pagina-desigualdades td { padding:9px 8px; border-bottom:1px solid var(--borda); }
+#pagina-desigualdades .de-num { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+#pagina-desigualdades .de-interpretacao { background:var(--superficie-2); border-left:3px solid var(--marca-clara); padding:14px; border-radius:8px; line-height:1.7; font-size:13px; margin:12px 0; }
+#pagina-desigualdades .de-btn { background:var(--superficie); color:var(--tinta-2); border:1px solid var(--borda-forte); border-radius:8px; padding:7px 12px; font:inherit; font-size:12px; cursor:pointer; }
+#pagina-desigualdades .de-btn:hover { border-color:var(--marca-clara); }
+@media (max-width:1200px) { #pagina-desigualdades .de-duas { grid-template-columns:1fr; } }
+@media (max-width:950px) { #pagina-desigualdades .de-resumo { grid-template-columns:repeat(2,minmax(0,1fr)); } #pagina-desigualdades .de-estratos-controles { grid-template-columns:1fr; } }
+@media (max-width:700px) { #pagina-desigualdades .de-controles { grid-template-columns:1fr; } #pagina-desigualdades .de-resumo { grid-template-columns:1fr; } #pagina-desigualdades .de-cabecalho { align-items:flex-start; } }
+
+/* Alternância de gráficos estratificados — versão 2. */
+#pagina-desigualdades .de-visual-controle{display:flex;flex-direction:column;gap:7px;min-width:0;}
+#pagina-desigualdades .de-visual-titulo{font-size:12px;font-weight:600;color:var(--tinta-2);}
+#pagina-desigualdades .de-visual-opcoes{display:flex;gap:5px;flex-wrap:wrap;}
+#pagina-desigualdades .de-visual-opcoes .de-tipo{font-size:11px;padding:8px 9px;white-space:nowrap;}
+#pagina-desigualdades .de-visual-opcoes .de-tipo.de-ativo{background:#2a78d6;color:white;border-color:#2a78d6;}
+#pagina-desigualdades .de-visual-opcoes .de-tipo:disabled{opacity:.42;cursor:not-allowed;}
+#pagina-desigualdades .de-visual-dica{font-size:10px;line-height:1.4;color:var(--tinta-3);}
+@media (min-width:951px){#pagina-desigualdades .de-estratos-controles{grid-template-columns:minmax(0,.8fr) minmax(0,.8fr) minmax(390px,1.4fr);}}
+
+
+/* Desigualdades — painel complementar e referência bruta (v3) */
+#pagina-desigualdades .de-bruta-resumo{display:flex;gap:16px;justify-content:space-between;align-items:center;
+    padding:11px 14px;background:var(--superficie-2);border:1px solid var(--borda);border-radius:10px;margin:8px 0 4px;}
+#pagina-desigualdades .de-bruta-resumo small{display:block;font-size:11px;color:var(--tinta-3);}
+#pagina-desigualdades .de-bruta-resumo strong{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;}
+#pagina-desigualdades .de-bruta-resumo p{margin:0;max-width:68%;}
+#pagina-desigualdades .de-paineis-extra{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px;}
+#pagina-desigualdades #deAreas,#pagina-desigualdades #deHistorico{min-height:330px;width:100%;}
+@media(max-width:1050px){#pagina-desigualdades .de-paineis-extra{grid-template-columns:1fr;}}
+@media(max-width:650px){#pagina-desigualdades .de-bruta-resumo{display:block;}
+  #pagina-desigualdades .de-bruta-resumo p{max-width:100%;margin-top:6px;}}

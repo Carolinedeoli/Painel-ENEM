@@ -48,7 +48,8 @@ export const COLUNAS_POR_PAGINA = {
     redacao:    ["redacao"].concat(RECORTE_PARTICIPANTE),
     perfil:     RECORTE_PARTICIPANTE,
     desempenho: RECORTE_PARTICIPANTE,
-    comparacao: RECORTE_PARTICIPANTE
+    comparacao: RECORTE_PARTICIPANTE,
+    desigualdades: RECORTE_PARTICIPANTE
 };
 
 export function rotuloDaColuna(coluna) {
