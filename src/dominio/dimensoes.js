@@ -47,7 +47,8 @@ export const COLUNAS_POR_PAGINA = {
     geral:      ["estado_prova", "tipo_escola", "dep_adm", "motivo_status"],
     redacao:    ["redacao"].concat(RECORTE_PARTICIPANTE),
     perfil:     RECORTE_PARTICIPANTE,
-    desempenho: RECORTE_PARTICIPANTE
+    desempenho: RECORTE_PARTICIPANTE,
+    comparacao: RECORTE_PARTICIPANTE
 };
 
 export function rotuloDaColuna(coluna) {

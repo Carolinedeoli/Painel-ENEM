@@ -63,7 +63,7 @@ export function registrarGrafico(spec) {
         atualizar(dados, contexto) {
             painel.dados = dados;
             painel.contexto = contexto;
-            renderizar(painel);
+            return renderizar(painel);
         },
         /** Redesenha com o último conjunto — usado na troca de tema. */
         redesenhar() {
@@ -84,13 +84,15 @@ function renderizar(painel) {
     const tipo = tipoEscolhido(painel, disponiveis);
 
     const { tracos, layout } = montar(tipo, painel.dados);
-    desenhar(painel.id, tracos, layout);
+    const promessaDesenho = desenhar(painel.id, tracos, layout);
 
     if (caixa) {
         escreverTitulo(caixa, painel);
         montarAcoes(caixa, painel, disponiveis, tipo);
         if (painel.tabelaAberta) montarTabela(caixa, painel);
     }
+return promessaDesenho;
+
 }
 
 function tipoEscolhido(painel, disponiveis) {

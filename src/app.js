@@ -24,6 +24,7 @@ import * as geral from "./paginas/geral.js";
 import * as redacao from "./paginas/redacao.js";
 import * as perfil from "./paginas/perfil.js";
 import * as desempenho from "./paginas/desempenho.js";
+import * as comparacao from "./paginas/comparacao.js";
 
 const PAGINAS = {
     geral: {
@@ -45,6 +46,11 @@ const PAGINAS = {
         iniciar: desempenho.iniciar,
         titulo: "Desempenho",
         subtitulo: "Distribuição das notas, proficiência e evolução das médias por área."
+    },
+    comparacao: {
+        iniciar: comparacao.iniciar,
+        titulo: "Comparação entre Grupos",
+        subtitulo: "Distribuições, estatísticas descritivas e testes de comparação de médias."
     },
     dados: {
         titulo: "Sobre os Dados",
@@ -223,12 +229,12 @@ function iniciar() {
 
     // 2ª onda dos agregados: os anos que não estão na tela, sem que a
     // primeira pintura espere por eles.
-    agregados.carregarRestante();
+    // agregados.carregarRestante(); // Sem carregar outros anos em segundo plano
 
     // Rede de segurança: se os agregados não estiverem publicados, recalcula
     // tudo em segundo plano. Nas visitas seguintes o marcador no IndexedDB
     // diz que já está tudo em cache e nada roda.
-    preaquecimento.iniciar({ perfil, desempenho });
+    // preaquecimento.iniciar({ perfil, desempenho }); // Consultar apenas a pagina ativa
 }
 
 if (document.readyState === "loading") {

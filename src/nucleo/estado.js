@@ -28,7 +28,7 @@ export const ANOS = ["2019", "2020", "2021", "2022", "2023"];
 export const ANO_PADRAO = "2023";
 
 /** Páginas que consomem filtros. "dados" é estática e não entra aqui. */
-export const PAGINAS_COM_FILTRO = ["geral", "redacao", "perfil", "desempenho"];
+export const PAGINAS_COM_FILTRO = ["geral", "redacao", "perfil", "desempenho", "comparacao"];
 
 const ESPERA_RAJADA = 120;   // ms para agrupar cliques seguidos
 

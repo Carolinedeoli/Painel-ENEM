@@ -232,7 +232,7 @@ export function desenhar(idElemento, tracos, extrasLayout, extrasOpcoes) {
         extrasLayout || {}
     ));
 
-    Plotly.react(elemento, tracos, layoutFinal, opcoes(extrasOpcoes));
+    return Plotly.react(elemento, tracos, layoutFinal, opcoes(extrasOpcoes));
 }
 
 /** Repinta tudo depois de uma troca de tema, com a mesma especificação. */

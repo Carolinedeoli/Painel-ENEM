@@ -18,6 +18,7 @@
 
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b2a52'/%3E%3Crect x='7' y='16' width='4.5' height='9' rx='1.5' fill='%23eb6834'/%3E%3Crect x='13.75' y='11' width='4.5' height='14' rx='1.5' fill='%232a78d6'/%3E%3Crect x='20.5' y='7' width='4.5' height='18' rx='1.5' fill='%231baf7a'/%3E%3C/svg%3E">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/comparacao-grupos.css">
 </head>
 
 <body>
@@ -64,6 +65,10 @@
             Desempenho
         </button>
 
+    <button class="btn-nav" type="button" data-pagina="comparacao">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19V5M4 19h16M7 15l4-4 4 2 5-7"/></svg>
+        Comparação entre Grupos
+    </button>
         <button class="btn-nav" type="button" data-pagina="dados">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"></path><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"></path></svg>
             Sobre os Dados
@@ -323,6 +328,126 @@
     <!-- =================================================================
          PÁGINA 5 — SOBRE OS DADOS
     ================================================================= -->
+
+    <!-- PÁGINA ADICIONAL — COMPARAÇÃO ENTRE GRUPOS -->
+    <section id="pagina-comparacao" class="pagina-view" hidden>
+      <div class="cg-controles painel-box">
+        <label>Variável para comparar
+          <select id="cgVariavel" aria-label="Variável de comparação"></select>
+        </label>
+        <label>Desempenho analisado
+          <select id="cgArea" aria-label="Área do ENEM"></select>
+        </label>
+      </div>
+      <div class="cg-resumo cg-quatro-cartoes-v4">
+        <article class="cg-mini"><small>Participantes com nota</small><strong id="cgTotal">—</strong></article>
+        <article class="cg-mini"><small>Categorias encontradas</small><strong id="cgCategorias">—</strong></article>
+        <article class="cg-mini"><small>Amplitude das médias</small><strong id="cgDiferenca">—</strong></article>
+      
+        <article class="cg-mini cg-mini-base">
+          <small>Base do cálculo</small>
+          <strong id="cgRecorteLabel">—</strong>
+          <span class="cg-mini-detalhe">Ano e filtros ativos desta página, aplicados a gráficos, tabelas e testes.</span>
+          <span id="cgAvisoFiltro" class="cg-mini-aviso" role="note"></span>
+          <span id="cgAndamento" class="cg-mini-andamento" role="status" aria-live="polite"></span>
+        </article></div>
+      <div class="cg-duas">
+        <article class="cg-caixa">
+          <div class="cg-cabecalho">
+            <h2>Distribuição do desempenho</h2>
+            <div class="cg-graficos-botoes" role="group" aria-label="Tipo de visualização">
+              <button type="button" data-cg-grafico="densidade" class="ativo">Densidade</button>
+              <button type="button" data-cg-grafico="histograma">Histograma</button>
+              <button type="button" data-cg-grafico="boxplot">Boxplot</button>
+            </div>
+          </div>
+          <div id="cgGrafico" class="grafico" aria-label="Gráfico por categoria"></div>
+          <p class="cg-aux">Densidade estimada por suavização dos histogramas (faixas de 10 pontos).
+          Boxplot utiliza quartis e extremos observados como whiskers.</p>
+        </article>
+        <article class="cg-caixa">
+          <h2>Estatísticas descritivas</h2>
+          <div class="cg-tabela-rolagem">
+            <table class="cg-descritiva-forma-v3" aria-label="Estatísticas descritivas por categoria, incluindo assimetria e curtose">
+              <thead><tr><th>Categoria</th><th class="num">N</th><th class="num">Média</th><th class="num">DP</th>
+              <th class="num">Mín.</th><th class="num">Q1</th><th class="num">Mediana</th>
+              <th class="num">Q3</th><th class="num">Máx.</th>
+              <th class="num" title="Assimetria amostral: valores positivos indicam maior cauda à direita; negativos, maior cauda à esquerda; perto de zero, simetria aproximada." aria-label="Assimetria amostral: passe o mouse para explicação">Assimetria ⓘ</th>
+              <th class="num" title="Curtose de Pearson: 3 é o valor de referência para uma distribuição Normal. Acima de 3 indica caudas/pico mais pronunciados; abaixo de 3, menos pronunciados. É calculada como excesso de curtose + 3." aria-label="Curtose de Pearson: passe o mouse para explicação">Curtose ⓘ</th></tr></thead>
+              <tbody id="cgCorpoDescritiva"></tbody>
+            </table>
+          </div>
+          <p class="cg-aux">Quartis, assimetria e curtose calculados diretamente sobre as notas do recorte.
+          <strong>Role a tabela horizontalmente</strong> para ver as colunas finais.
+          Assimetria próxima de 0 e curtose de Pearson próxima de 3 indicam características de forma semelhantes às da Normal, mas não comprovam normalidade.</p>
+        </article>
+      </div>
+      <article class="cg-caixa">
+        <h2>Testes estatísticos e interpretação</h2>
+        <div class="cg-card-testes">
+          <section class="cg-card">
+            <h3>Teste de Levene <span class="cg-info"><button type="button" class="cg-info-botao" aria-label="Mais informações sobre o teste de Levene" aria-describedby="cgDicaLevene">i</button><span class="cg-info-texto" id="cgDicaLevene" role="tooltip">Esta página usa a versão Brown–Forsythe, que aplica ANOVA aos desvios absolutos das notas em relação à mediana do respectivo grupo. H₀: as variâncias populacionais são iguais. H₁: pelo menos uma difere. Região crítica: valores de F acima do quantil 0,95 da distribuição F com os graus de liberdade do teste. Equivale a p &lt; 0,05. Não rejeitar H₀ não comprova igualdade.</span></span></h3>
+            <small>Investiga se a dispersão das notas difere entre categorias.</small>
+            <small class="cg-hipotese"><b>H₀:</b> variâncias iguais. <b>H₁:</b> alguma difere.</small>
+            <small class="cg-regra"><b>Critério (α = 5%):</b> rejeitar H₀ se p &lt; 0,05.</small>
+            <strong id="cgLeveneValor">—</strong>
+            <small id="cgLeveneMeta"></small>
+            <small class="cg-decisao" id="cgLeveneDecisao">Aguardando cálculo.</small>
+          </section>
+          <section class="cg-card">
+            <h3>ANOVA de Welch <span class="cg-info"><button type="button" class="cg-info-botao" aria-label="Mais informações sobre a ANOVA de Welch" aria-describedby="cgDicaWelch">i</button><span class="cg-info-texto" id="cgDicaWelch" role="tooltip">Compara as médias das categorias, permitindo tamanhos de amostra e variâncias diferentes. H₀: todas as médias populacionais são iguais. H₁: pelo menos duas médias diferem. Região crítica: F observado maior que o quantil 0,95 da distribuição F com graus de liberdade ajustados pelo método Welch; equivale a p &lt; 0,05. A rejeição não identifica quais pares diferem.</span></span></h3>
+            <small>Verifica diferenças globais entre as médias.</small>
+            <small class="cg-hipotese"><b>H₀:</b> médias iguais. <b>H₁:</b> alguma difere.</small>
+            <small class="cg-regra"><b>Critério (α = 5%):</b> rejeitar H₀ se p &lt; 0,05.</small>
+            <strong id="cgWelchValor">—</strong>
+            <small id="cgWelchMeta"></small>
+            <small class="cg-decisao" id="cgWelchDecisao">Aguardando cálculo.</small>
+          </section>
+          <section class="cg-card">
+            <h3>Tamanho de efeito — ω² clássico <span class="cg-info"><button type="button" class="cg-info-botao" aria-label="Mais informações sobre o ômega quadrado" aria-describedby="cgDicaOmega">i</button><span class="cg-info-texto" id="cgDicaOmega" role="tooltip">O ômega quadrado clássico da ANOVA convencional estima a magnitude da associação entre grupo e nota. Fórmula: ω² = [SQ_entre − (k−1)×QM_dentro] / [SQ_total + QM_dentro]. Não é calculado a partir de F de Welch, e não estabelece causalidade. Como as variâncias podem ser desiguais, a interpretação deve considerar essa limitação. Referências descritivas para magnitude: abaixo de 0,01 muito pequeno; de 0,01 a menos de 0,06 pequeno; de 0,06 a menos de 0,14 moderado; 0,14 ou mais grande.</span></span></h3>
+            <small>Estima a magnitude da associação, sem inferir causalidade.</small>
+            <small class="cg-hipotese"><b>H₀:</b> não se aplica; não é teste de hipótese.</small>
+            <small class="cg-regra"><b>Critério:</b> interpretar a magnitude, não o valor-p.</small>
+            <strong id="cgEtaValor">—</strong>
+            <small id="cgEtaMeta"></small>
+            <small class="cg-decisao">Método: ω² clássico da ANOVA; médias testadas por Welch.</small>
+            <small class="cg-formula">ω² = [SQ<sub>entre</sub> − (k−1)×QM<sub>dentro</sub>] / [SQ<sub>total</sub> + QM<sub>dentro</sub>]</small>
+          </section>
+          <section class="cg-card">
+            <h3>Games–Howell <span class="cg-info"><button type="button" class="cg-info-botao" aria-label="Mais informações sobre Games–Howell" aria-describedby="cgDicaGames">i</button><span class="cg-info-texto" id="cgDicaGames" role="tooltip">Compara todos os pares de categorias após a análise global. Para cada par, H₀: as duas médias são iguais; H₁: são diferentes. O p ajustado usa a distribuição da amplitude studentizada, considerando tamanhos amostrais e variâncias diferentes. Rejeita-se H₀ para o par se p ajustado &lt; 0,05; de modo equivalente, o intervalo simultâneo de confiança de 95% para a diferença não inclui zero. O d_av descreve a magnitude da diferença, não sua significância.</span></span></h3>
+            <small>Identifica os pares com médias diferentes.</small>
+            <small class="cg-hipotese"><b>H₀:</b> médias do par iguais. <b>H₁:</b> diferentes.</small>
+            <small class="cg-regra"><b>Critério (α = 5%):</b> p ajustado &lt; 0,05.</small>
+            <strong id="cgGamesValor">—</strong>
+            <small id="cgGamesMeta">Resultados apresentados na tabela abaixo.</small>
+            <small class="cg-decisao" id="cgGamesDecisao">Aguardando comparações.</small>
+          </section>
+        </div>
+        <div id="cgInterpretacao" class="cg-interpretacao" aria-live="polite">
+          Selecione a variável e aguarde o cálculo para ver a interpretação.
+        </div>
+        <div class="cg-cabecalho"><h2>Games–Howell: comparações detalhadas</h2>
+          <button type="button" id="cgDownload" class="cg-btn">Baixar CSV</button>
+        </div>
+        <p class="cg-nota">Identifica quais categorias diferem. Inclui IC simultâneos de 95%,
+          valor-p ajustado pela amplitude studentizada e tamanho de efeito d<sub>av</sub>.</p>
+        <div class="cg-busca">
+          <input id="cgBusca" type="search" aria-label="Filtrar comparações" placeholder="Buscar categoria ou par…">
+          <span id="cgParesMeta" class="cg-aux"></span>
+        </div>
+        <div class="cg-tabela-rolagem">
+          <table aria-label="Comparações Games-Howell">
+            <thead><tr><th>Grupo 1</th><th>Grupo 2</th><th class="num">Dif. média (1 − 2)</th>
+              <th class="num">IC 95%</th><th class="num">p ajustado</th>
+              <th class="num">d_av</th><th>Magnitude</th></tr></thead>
+            <tbody id="cgCorpoPares"></tbody>
+          </table>
+        </div>
+        <p class="cg-aux">Resultados exploratórios, condicionados ao recorte selecionado.
+          Compare magnitudes e verifique os pressupostos antes de interpretar os valores-p.</p>
+      </article>
+    </section>
+
     <section id="pagina-dados" class="pagina-view" hidden>
 
         <div class="grade">

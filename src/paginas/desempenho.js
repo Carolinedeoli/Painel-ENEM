@@ -127,49 +127,69 @@ function registrarGraficos() {
    2. ATUALIZAÇÃO
 ========================================================================= */
 async function atualizar(execucao) {
-    const ano = estado.ano();
-    const area = estado.area();
-    const tabela = `'${tabelaDoAno(ano)}'`;
-    const encerrarIndicador = ui.atualizando(ID_PAGINA, "Consultando " + ano + "…", execucao);
+  const ano = estado.ano();
+  const area = estado.area();
+  const tabela = `'${tabelaDoAno(ano)}'`;
+  const ehAtual = () => !execucao || execucao.ehAtual();
+  const encerrarIndicador = ui.atualizando(ID_PAGINA, "Consultando " + ano + "…", execucao);
 
-    try {
-        await sincronizarOpcoes(ID_PAGINA, tabela);
+  try {
+    await sincronizarOpcoes(ID_PAGINA, tabela);
+    if (!ehAtual()) return;
+    const recorte = estado.recorte(ID_PAGINA);
+    const resumo = await consultarResumo(ano, recorte);
+    if (!ehAtual()) return;
 
-        const recorte = estado.recorte(ID_PAGINA);
-        const resumo = await consultarResumo(ano, recorte);
-
-        // Uma atualização mais nova já começou: esta não pode escrever na
-        // tela, ou sobrescreveria o recorte atual com um recorte antigo.
-        if (execucao && !execucao.ehAtual()) return;
-
-        if (!resumo || resumo.total === 0) {
-            ui.vazio(ID_PAGINA, "Nenhum participante neste recorte",
-                "Os filtros selecionados não retornaram participantes com as cinco notas em "
-                + ano + ".");
-            return;
-        }
-        ui.pronto(ID_PAGINA);
-
-        const [estados, densidade, densidadeDep, porAno, conclusao] =
-            await consultarDetalhes(ano, recorte, area);
-
-        if (execucao && !execucao.ehAtual()) return;
-
-        const contexto = { ano, area };
-
-        renderizarIndicadores(resumo);
-        renderizarMediasPorArea(resumo);
-        renderizarTabelaEstados(estados);
-        renderizarTabelaConclusao(conclusao, ano);
-
-        graficos.densidade.atualizar(conjuntoDensidade(densidade, area), contexto);
-        graficos.densidadeDep.atualizar(conjuntoDensidadePorDependencia(densidadeDep, area), contexto);
-        graficos.mediaAno.atualizar(conjuntoMediaPorAno(porAno), contexto);
-    } catch (erro) {
-        ui.mostrarFalha(ID_PAGINA, "Desempenho", erro);
-    } finally {
-        encerrarIndicador();
+    if (!resumo || Number(resumo.total) === 0) {
+      ui.vazio(ID_PAGINA, "Nenhum participante neste recorte",
+        "Os filtros selecionados não retornaram participantes com as cinco notas em " + ano + ".");
+      return;
     }
+
+    // Indicadores e médias aparecem assim que o resumo estiver disponível.
+    renderizarIndicadores(resumo);
+    renderizarMediasPorArea(resumo);
+    const contexto = { ano, area };
+    ui.progresso(ID_PAGINA, "Atualizando os gráficos e as tabelas…");
+
+    // As cinco consultas começam juntas, mas cada componente é desenhado
+    // assim que SEU resultado chega, sem aguardar a consulta histórica.
+    const [pEstados, pDensidade, pDensidadeDep, pPorAno, pConclusao] =
+      consultarPromessasDetalhes(ano, recorte, area);
+
+    const tarefas = [
+      pEstados.then(linhas => {
+        if (ehAtual()) renderizarTabelaEstados(linhas);
+      }),
+      pDensidade.then(linhas => {
+        if (ehAtual()) return graficos.densidade.atualizar(conjuntoDensidade(linhas, area), contexto);
+      }),
+      pDensidadeDep.then(linhas => {
+        if (ehAtual()) return graficos.densidadeDep.atualizar(conjuntoDensidadePorDependencia(linhas, area), contexto);
+      }),
+      pPorAno.then(linhas => {
+        if (ehAtual()) return graficos.mediaAno.atualizar(conjuntoMediaPorAno(linhas), contexto);
+      }),
+      pConclusao.then(linhas => {
+        if (ehAtual()) renderizarTabelaConclusao(linhas, ano);
+      })
+    ];
+
+    // Plotly.react() devolve uma Promise: aguardamos o desenho terminar.
+    const resultados = await Promise.allSettled(tarefas);
+    if (!ehAtual()) return;
+    const falha = resultados.find(resultado => resultado.status === "rejected");
+    if (falha) throw falha.reason;
+
+    // Aguarda o navegador pintar o resultado antes de esconder o aviso.
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    if (!ehAtual()) return;
+    ui.pronto(ID_PAGINA);
+  } catch (erro) {
+    if (ehAtual()) ui.mostrarFalha(ID_PAGINA, "Desempenho", erro);
+  } finally {
+    encerrarIndicador();
+  }
 }
 
 /* =========================================================================
@@ -208,12 +228,12 @@ function consultarResumo(ano, recorte) {
  * as outras três têm SQL idêntico quando a área muda, e por isso voltam do
  * cache sem tocar em arquivo.
  */
-function consultarDetalhes(ano, recorte, area) {
+function consultarPromessasDetalhes(ano, recorte, area) {
     const tabela = `'${tabelaDoAno(ano)}'`;
     const comNotas = filtroComNotas(recorte);
     const expressao = expressaoDaArea(area);
 
-    return Promise.all([
+    return [
         consultar(`
             SELECT estado_prova, CAST(COUNT(*) AS BIGINT) AS qtd
             FROM ${tabela} ${comNotas} AND NU_NOTA_REDACAO = 1000
@@ -252,8 +272,14 @@ function consultarDetalhes(ano, recorte, area) {
               AND TP_ST_CONCLUSAO = 1 AND TP_ANO_CONCLUIU IS NOT NULL
             GROUP BY TP_ANO_CONCLUIU ORDER BY TP_ANO_CONCLUIU DESC
         `)
-    ]);
+    ];
 }
+
+// Compatibilidade com as tarefas de pré-aquecimento já existentes.
+function consultarDetalhes(ano, recorte, area) {
+  return Promise.all(consultarPromessasDetalhes(ano, recorte, area));
+}
+
 
 /**
  * Tarefas de pré-aquecimento deste ano.
