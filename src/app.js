@@ -24,6 +24,7 @@ import * as geral from "./paginas/geral.js";
 import * as redacao from "./paginas/redacao.js";
 import * as perfil from "./paginas/perfil.js";
 import * as desempenho from "./paginas/desempenho.js";
+import * as tri from "./paginas/tri.js";
 import * as comparacao from "./paginas/comparacao.js";
 import * as desigualdades from "./paginas/desigualdades.js";
 
@@ -57,6 +58,11 @@ const PAGINAS = {
         iniciar: desigualdades.iniciar,
         titulo: "Desigualdades Educacionais",
         subtitulo: "Cruze duas características socioeconômicas e explore diferenças de desempenho entre grupos."
+    },
+    tri: {
+        iniciar: tri.iniciar,
+        titulo: "Entendendo a TRI",
+        subtitulo: "Modelo 3PL, Curva Característica do Item e Informação do Item com parâmetros reais do ENEM."
     },
     dados: {
         titulo: "Sobre os Dados",
@@ -98,6 +104,7 @@ function alterarPagina(idPagina) {
     const comFiltro = estado.PAGINAS_COM_FILTRO.includes(idPagina);
     document.getElementById("btnFiltros").hidden = !comFiltro;
     document.getElementById("controlesAno").hidden = !comFiltro;
+    document.getElementById("anoDoTitulo").hidden = idPagina === "tri";
 
     estado.definirPaginaAtiva(idPagina);
     painelFiltros.definirPaginaAtiva();

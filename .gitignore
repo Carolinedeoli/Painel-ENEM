@@ -1,5 +1,42 @@
 
 
+# Configurações locais
+.vscode/
+*.pyc
+.Rhistory
+
+
+# TRI - publicar apenas as bases finais
+/dados/tri/*
+!/dados/tri/catalogo_itens.json
+!/dados/tri/mapa_cadernos.json
+
+# Calibracao - publicar apenas a versao final
+/Calibracao_TRI_ENEM/*
+!/Calibracao_TRI_ENEM/coeficientes_tri_painel_publico_v9.json
+
+# Arquivo de triagem
+/dados/triagem_20_cadernos_revisar_TRI.csv
+
+
+# Pastas de desenvolvimento e documentação interna
+/Documentos/
+/Processo tri/
+/Vertice_desenvolvimento/
+/Pacote_auditoria_liberacao_TRI_ENEM/
+/Pacote_filtro_validacao_TRI_v2/
+
+# Backups
+/backups_tri_v*/
+/backups_vertice/
+
+# Scripts de execução local
+/servidor-local.js
+
+# Arquivos temporários
+*.tmp
+*.bak
+
 # Logs
 logs
 *.log

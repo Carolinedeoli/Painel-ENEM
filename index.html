@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel ENEM — 2019 a 2023</title>
+    <title>VÉRTICE ENEM — Dados, TRI e desigualdades educacionais</title>
     <meta name="description"
           content="Painel interativo dos microdados do ENEM de 2019 a 2023: participação, redações zeradas, perfil dos participantes e desempenho por área.">
-    <meta name="theme-color" content="#0b2a52">
+    <meta name="theme-color" content="#102C42">
 
     <!--
         Base dos arquivos de dados. Deixe vazio para usar a pasta dados/ do
@@ -16,10 +16,13 @@
     -->
     <meta name="painel-dados-base" content="">
 
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b2a52'/%3E%3Crect x='7' y='16' width='4.5' height='9' rx='1.5' fill='%23eb6834'/%3E%3Crect x='13.75' y='11' width='4.5' height='14' rx='1.5' fill='%232a78d6'/%3E%3Crect x='20.5' y='7' width='4.5' height='18' rx='1.5' fill='%231baf7a'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="assets/vertice-simbolo.svg">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/tri.css">
     <link rel="stylesheet" href="css/comparacao-grupos.css">
     <link rel="stylesheet" href="css/desigualdades.css">
+  <link rel="stylesheet" href="css/vertice.css">
+    <link rel="stylesheet" href="css/sobre-tri-vertice.css">
 </head>
 
 <body>
@@ -32,16 +35,16 @@
 <aside class="barra-lateral">
     <div class="logo-painel">
         <span class="logo-marca" aria-hidden="true">
-            <svg viewBox="0 0 32 32" width="30" height="30">
-                <rect width="32" height="32" rx="8" fill="rgba(255,255,255,.12)"/>
-                <rect x="7" y="16" width="4.5" height="9" rx="1.5" fill="#eb6834"/>
-                <rect x="13.75" y="11" width="4.5" height="14" rx="1.5" fill="#6da7ec"/>
-                <rect x="20.5" y="7" width="4.5" height="18" rx="1.5" fill="#1baf7a"/>
+            <svg viewBox="0 0 48 48" width="36" height="36" focusable="false" aria-hidden="true">
+              <path d="M10 36 L23 9 L38 35 Z" fill="none" stroke="#BCECF0" stroke-width="2.4" stroke-linejoin="round"/>
+              <path d="M10 36 L29 26 L38 35 M23 9 L29 26" fill="none" stroke="#70C8D7" stroke-width="2.1" stroke-linejoin="round"/>
+              <path d="M23 9 L29 26 L10 36" fill="#4E9DA8" opacity=".24"/>
+              <circle cx="29" cy="26" r="3.5" fill="#F6C772"/>
             </svg>
         </span>
         <span class="logo-texto">
-            <strong>Painel ENEM</strong>
-            <small>2019 – 2023</small>
+            <strong>VÉRTICE</strong>
+            <small>ENEM em perspectiva</small>
         </span>
     </div>
 
@@ -74,7 +77,12 @@
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
         Desigualdades Educacionais
     </button>
-        <button class="btn-nav" type="button" data-pagina="dados">
+
+    <button class="btn-nav" type="button" data-pagina="tri">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M5 20V9l7-5 7 5v11M9 20v-6h6v6"/><path d="M8 9h8M12 6v8"/></svg>
+        Entendendo a TRI
+    </button>
+<button class="btn-nav" type="button" data-pagina="dados">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"></path><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"></path></svg>
             Sobre os Dados
         </button>
@@ -97,6 +105,7 @@
 
     <header class="topo">
         <div class="topo-titulo">
+    <div class="vertice-eyebrow">VÉRTICE ENEM · Explore, aprenda, interprete</div>
             <h1>
                 <span id="tituloPagina">Estatísticas Gerais</span>
                 <!-- O ano vem do estado central: é sempre o mesmo que filtra
@@ -138,6 +147,20 @@
          PÁGINA 1 — ESTATÍSTICAS GERAIS
     ================================================================= -->
     <section id="pagina-geral" class="pagina-view">
+<!-- VERTICE-HERO-INICIO -->
+        <div class="vertice-hero" role="region" aria-label="Apresentação do VÉRTICE ENEM">
+          <div class="vertice-hero-copy">
+            <span class="vertice-kicker">VÉRTICE ENEM · Visão Estatística de Resultados, TRI, Interpretação e Comparações Educacionais</span>
+            <h2>Os dados revelam diferentes perspectivas da educação.</h2>
+            <p>Explore os resultados do ENEM, compreenda como funciona a Teoria de Resposta ao Item e investigue diferenças de desempenho entre grupos de participantes.</p>
+            <div class="vertice-hero-tags"><span>Dados abertos do INEP</span><span>Aprendizagem da TRI</span><span>Desigualdades educacionais</span></div>
+          </div>
+          <div class="vertice-hero-arte" aria-hidden="true">
+            <svg viewBox="0 0 190 160" focusable="false"><path d="M25 130L85 20l75 110z" fill="none" stroke="#E3FAFC" stroke-width="3"/><path d="M25 130l96-45 39 45M85 20l36 65" fill="none" stroke="#80DAE0" stroke-width="2.5"/><path d="M85 20l36 65L25 130" fill="#C4F2EF" opacity=".11"/><circle cx="121" cy="85" r="7" fill="#F4C36B"/><circle cx="85" cy="20" r="4" fill="#fff"/></svg>
+          </div>
+        </div>
+        <!-- VERTICE-HERO-FIM -->
+
 
         <div id="indicadoresGeral" class="faixa-indicadores"></div>
 
@@ -348,7 +371,7 @@
         <article class="cg-mini"><small>Participantes com nota</small><strong id="cgTotal">—</strong></article>
         <article class="cg-mini"><small>Categorias encontradas</small><strong id="cgCategorias">—</strong></article>
         <article class="cg-mini"><small>Amplitude das médias</small><strong id="cgDiferenca">—</strong></article>
-      
+
         <article class="cg-mini cg-mini-base">
           <small>Base do cálculo</small>
           <strong id="cgRecorteLabel">—</strong>
@@ -570,9 +593,231 @@
         <p class="de-nota">As comparações são descritivas. Diferenças entre grupos podem refletir diversas características associadas simultaneamente; não representam efeitos causais nem substituem modelos com ajuste por confundimento.</p>
       </article>
     </section>
+    <!-- PÁGINA — TEORIA DE RESPOSTA AO ITEM (TRI) -->
+<section id="pagina-tri" class="pagina-view" hidden>
+  <div class="tri-intro">
+    <div class="tri-intro-marca">VÉRTICE · APRENDA A TRI</div>
+    <h2>Como uma questão se relaciona com a proficiência?</h2>
+    <p>A Teoria de Resposta ao Item modela a probabilidade de acertar uma questão a partir da proficiência do participante e das características da questão. Selecione um item real do ENEM e explore como seus parâmetros alteram a curva.</p>
+  </div>
+  <nav id="tri-indice" class="tri-card tri-indice" aria-label="Índice das seções da TRI">
+    <div class="tri-card-title"><div><h2>Explore a Teoria de Resposta ao Item</h2><p>Escolha um assunto. Todas as análises permanecem nesta página e utilizam a seleção de caderno acima.</p></div></div>
+    <div class="tri-indice-grid">
+      <button type="button" class="tri-indice-link" data-tri-destino="tri-modelo"><span>01</span> Modelo 3PL</button>
+      <button type="button" class="tri-indice-link" data-tri-destino="tri-itens"><span>02</span> Questões reais</button>
+      <button type="button" class="tri-indice-link" data-tri-destino="tri-cci"><span>03</span> Curva característica</button>
+      <button type="button" class="tri-indice-link" data-tri-destino="tri-fii"><span>04</span> Informação do item</button>
+      <button type="button" class="tri-indice-link" data-tri-destino="tri-fit"><span>05</span> Informação do teste</button>
+      <button type="button" class="tri-indice-link" data-tri-destino="tri-eap"><span>06</span> Estimação EAP</button>
+      <button type="button" class="tri-indice-link" data-tri-destino="tri-respostas"><span>07</span> Padrões de respostas</button>
+      <button type="button" class="tri-indice-link" data-tri-destino="tri-respostas-livres"><span>08</span> Estime sua nota</button>
+    </div>
+  </nav>
+
+  <article id="tri-modelo" class="tri-card tri-formula">
+    <div class="tri-card-title">
+      <h2>Modelo logístico de três parâmetros (3PL)</h2>
+      <span class="tri-chip">Fator D = 1</span>
+    </div>
+    <div class="tri-equation" role="math" aria-label="P de acerto dado theta é igual a c mais 1 menos c, dividido por 1 mais exponencial de menos a vezes theta menos b">
+      <math display="block"><mrow><msub><mi>P</mi><mi>i</mi></msub><mo>(</mo><mi>θ</mi><mo>)</mo><mo>=</mo><msub><mi>c</mi><mi>i</mi></msub><mo>+</mo><mo>(</mo><mn>1</mn><mo>−</mo><msub><mi>c</mi><mi>i</mi></msub><mo>)</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><mo>−</mo><msub><mi>a</mi><mi>i</mi></msub><mo>(</mo><mi>θ</mi><mo>−</mo><msub><mi>b</mi><mi>i</mi></msub><mo>)</mo></mrow></msup></mrow></mfrac></mrow></math>
+    </div>
+    <div class="tri-parametros-explicados">
+      <div><b>a · Discriminação</b><span>Controla o quanto a probabilidade varia perto da transição.</span></div>
+      <div><b>b · Dificuldade</b><span>Desloca a curva para a esquerda ou para a direita.</span></div>
+      <div><b>c · Acerto casual</b><span>Determina a assíntota inferior da probabilidade de acerto.</span></div>
+      <div><b>θ · Proficiência</b><span>É a posição do participante na escala de habilidade.</span></div>
+    </div>
+    <p class="tri-nota">No modelo 3PL, quando θ = b, P(acerto) = (1 + c)/2. A dificuldade não corresponde necessariamente a 50% de acerto.</p>
+  </article>
+
+  <article id="tri-itens" class="tri-card">
+    <div class="tri-card-title"><div><h2>Escolher uma questão real do ENEM</h2><p>Os seletores seguem o ano, a área, a cor do caderno e a questão. Escolha a aplicação e o caderno como estão identificados na capa. O código do INEP é localizado automaticamente.</p></div><span id="triModo" class="tri-chip">Carregando base…</span></div>
+    <div id="triAviso" class="tri-aviso" role="status" aria-live="polite">Preparando catálogo de itens…</div>
+    <div class="tri-seletores">
+      <label>Ano <select id="triAno" disabled aria-label="Ano da edição"></select></label>
+      <label>Área <select id="triArea" disabled aria-label="Área da prova"></select></label>
+      <label id="triLinguaGrupo" hidden>Língua estrangeira <select id="triLingua" aria-label="Língua estrangeira da prova"></select></label>
+      <div class="tri-seletor-cor"><span class="tri-label">Cor do caderno</span><div id="triCores" class="tri-cores" aria-label="Selecionar cor do caderno" role="group"></div></div>
+      <label>Tipo de aplicação <select id="triAplicacao" disabled aria-label="Tipo de aplicação informado na capa"></select></label>
+      <label>Identificação do caderno <select id="triCaderno" disabled aria-label="Caderno impresso e modalidade de aplicação"></select></label>
+      <label>Questão (posição no caderno) <select id="triQuestao" disabled aria-label="Posição da questão"></select></label>
+    </div>
+    <p class="tri-nota tri-v5-ajuda" id="triOrientacaoCaderno">Selecione o tipo de aplicação e o caderno conforme a capa da prova. O código do INEP é identificado automaticamente.</p>
+    <details id="triDetalhesTecnicos" class="tri-v5-detalhes">
+      <summary>Não sei qual é meu caderno / conferir identificação</summary>
+      <p>Na capa da prova, procure o <b>número do caderno, a cor e a aplicação</b> (regular, reaplicação/PPL ou digital). Se a sua edição for especial, consulte as provas oficiais do INEP para conferir a modalidade.</p>
+      <p id="triCodigoInterno" class="tri-v5-codigo">Código técnico do INEP: —</p>
+      <a id="triLinkInep" href="https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos/2023" target="_blank" rel="noopener noreferrer">Consultar cadernos e gabaritos no INEP</a>
+    </details>
+    <p class="tri-nota" id="triSelecaoNota">Itens excluídos da estimação aparecem desabilitados na lista.</p>
+    <div class="tri-item-info" id="triItemInfo" aria-live="polite"></div>
+  </article>
+
+  <div class="tri-simulacao">
+    <article id="tri-cci" class="tri-card">
+      <div class="tri-card-title"><div><h2>Curva Característica do Item (CCI)</h2><p>Altere os parâmetros e acompanhe a probabilidade de acerto.</p></div><button class="tri-btn tri-btn-outline" id="triRestaurar" type="button">Restaurar parâmetros do item</button></div>
+      <div class="tri-controles">
+        <label class="tri-slider"><span><b>Discriminação (a)</b><output id="triValorA">1,5</output></span><input type="range" id="triA" min="0.10" max="5" step="0.00001" value="1.5"></label>
+        <label class="tri-slider"><span><b>Dificuldade (b)</b><output id="triValorB">0,00</output></span><input type="range" id="triB" min="-4" max="4" step="0.00001" value="0"></label>
+        <label class="tri-slider"><span><b>Acerto casual (c)</b><output id="triValorC">0,20</output></span><input type="range" id="triC" min="0" max="0.6" step="0.00001" value="0.2"></label>
+        <label class="tri-slider"><span><b>Proficiência (θ)</b><output id="triValorTheta">0,00</output></span><input type="range" id="triTheta" min="-4" max="4" step="0.05" value="0"></label>
+      </div>
+      <label class="tri-check"><input type="checkbox" id="triMostrarOriginal" checked> Comparar com a curva oficial do item (linha pontilhada)</label>
+      <div id="triGraficoCCI" class="tri-grafico" role="img" aria-label="Curva característica do item e probabilidade de acerto"></div>
+      <div class="tri-metricas">
+        <div><small>Probabilidade em θ selecionado</small><strong id="triProbabilidade">—</strong></div>
+        <div><small>Probabilidade em θ = b</small><strong id="triProbNoB">—</strong></div>
+        <div><small>Proficiência selecionada</small><strong id="triThetaDestaque">—</strong></div>
+      </div>
+      <p id="triInterpretacao" class="tri-explicacao"></p>
+    </article>
+    <article id="tri-fii" class="tri-card">
+      <div class="tri-card-title"><div><h2>Função de Informação do Item (FII)</h2><p>Descubra em que região de θ a questão informa mais sobre a proficiência.</p></div></div>
+      <div class="tri-equation tri-equation-small"><math display="block"><mrow><msub><mi>I</mi><mi>i</mi></msub><mo>(</mo><mi>θ</mi><mo>)</mo><mo>=</mo><msubsup><mi>a</mi><mi>i</mi><mn>2</mn></msubsup><mo>·</mo><mfrac><msup><mrow><mo>(</mo><msub><mi>P</mi><mi>i</mi></msub><mo>(</mo><mi>θ</mi><mo>)</mo><mo>−</mo><msub><mi>c</mi><mi>i</mi></msub><mo>)</mo></mrow><mn>2</mn></msup><msup><mrow><mo>(</mo><mn>1</mn><mo>−</mo><msub><mi>c</mi><mi>i</mi></msub><mo>)</mo></mrow><mn>2</mn></msup></mfrac><mo>·</mo><mfrac><mrow><mn>1</mn><mo>−</mo><msub><mi>P</mi><mi>i</mi></msub><mo>(</mo><mi>θ</mi><mo>)</mo></mrow><mrow><msub><mi>P</mi><mi>i</mi></msub><mo>(</mo><mi>θ</mi><mo>)</mo></mrow></mfrac></mrow></math></div>
+      <div id="triGraficoFII" class="tri-grafico" role="img" aria-label="Função de informação do item"></div>
+      <div class="tri-metricas tri-metricas-duas">
+        <div><small>Informação em θ selecionado</small><strong id="triInfoAtual">—</strong></div>
+        <div><small>Pico de informação (no intervalo)</small><strong id="triInfoPico">—</strong></div>
+      </div>
+      <p class="tri-explicacao" id="triExplicacaoInfo">A precisão depende da informação que o item fornece em cada nível de proficiência. O pico não coincide necessariamente com b no modelo 3PL.</p>
+    </article>
+  </div>
+  <details id="tri-fit" class="tri-card tri-accordion">
+    <summary><span><b>05 · Função de Informação do Teste (FIT)</b><small>Como todas as questões válidas de um caderno contribuem para a precisão?</small></span><span class="tri-accordion-icone" aria-hidden="true">⌄</span></summary>
+    <div class="tri-accordion-corpo">
+      <p>A informação do teste é a soma das informações dos itens válidos selecionados. Em geral, quanto maior a informação em um nível de proficiência, menor o erro-padrão aproximado de estimação naquela região.</p>
+      <div class="tri-equation tri-equation-small"><math display="block"><mrow>
+        <msub><mi>I</mi><mtext>Teste</mtext></msub><mo>(</mo><mi>θ</mi><mo>)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>m</mi></munderover><msub><mi>I</mi><mi>i</mi></msub><mo>(</mo><mi>θ</mi><mo>)</mo>
+        <mspace width="1.4em"/><mtext>e</mtext><mspace width="1.4em"/>
+        <mi>EP</mi><mo>(</mo><mi>θ</mi><mo>)</mo><mo>≈</mo><mfrac><mn>1</mn><msqrt><msub><mi>I</mi><mtext>Teste</mtext></msub><mo>(</mo><mi>θ</mi><mo>)</mo></msqrt></mfrac>
+      </mrow></math></div>
+      <div class="tri-linha-cabecalho">
+        <div class="tri-caderno-resumo" id="triFitCabecalho">Selecione um caderno válido para calcular a informação.</div>
+        <label class="tri-seletor-inline">Visualização <select id="triFitModo"><option value="informacao">Informação do teste</option><option value="erro">Erro-padrão aproximado</option></select></label>
+      </div>
+      <div class="tri-grafico tri-grafico-longo" id="triGraficoFIT" role="img" aria-label="Informação total ou erro-padrão aproximado ao longo da proficiência"></div>
+      <div class="tri-metricas">
+        <div><small>Itens válidos utilizados</small><strong id="triFitN">—</strong></div>
+        <div><small>Informação em θ atual</small><strong id="triFitAtual">—</strong></div>
+        <div><small>Erro-padrão aprox. em θ</small><strong id="triFitErro">—</strong></div>
+      </div>
+      <p class="tri-nota">O EP apresentado é uma aproximação pela informação de Fisher: não é o desvio-padrão posterior do estimador EAP. Questões anuladas ou sem parâmetros válidos ficam fora da soma.</p>
+    </div>
+  </details>
+
+  <details id="tri-eap" class="tri-card tri-accordion">
+    <summary><span><b>06 · Como estimamos a proficiência? (EAP)</b><small>Verossimilhança, distribuição a priori e média posterior</small></span><span class="tri-accordion-icone" aria-hidden="true">⌄</span></summary>
+    <div class="tri-accordion-corpo">
+      <p>Na TRI, cada resposta observada contribui para a verossimilhança de diferentes valores de proficiência. No método <b>Expected a Posteriori (EAP)</b>, combinamos essa verossimilhança com uma distribuição a priori, aqui <b>θ ~ N(0,1)</b>. A média da distribuição posterior é a estimativa EAP.</p>
+      <div class="tri-equacao-lista">
+        <div><span>1 · Verossimilhança do padrão de respostas</span><div class="tri-equation tri-equation-small"><math display="block"><mrow><mi>L</mi><mo>(</mo><mi>θ</mi><mo>∣</mo><mi>u</mi><mo>)</mo><mo>=</mo><munderover><mo>∏</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>m</mi></munderover><msubsup><mi>P</mi><mi>i</mi><msub><mi>u</mi><mi>i</mi></msub></msubsup><mo>(</mo><mi>θ</mi><mo>)</mo><msup><mrow><mo>[</mo><mn>1</mn><mo>−</mo><msub><mi>P</mi><mi>i</mi></msub><mo>(</mo><mi>θ</mi><mo>)</mo><mo>]</mo></mrow><mrow><mn>1</mn><mo>−</mo><msub><mi>u</mi><mi>i</mi></msub></mrow></msup></mrow></math></div></div>
+        <div><span>2 · Distribuição a posteriori</span><div class="tri-equation tri-equation-small"><math display="block"><mrow><mi>f</mi><mo>(</mo><mi>θ</mi><mo>∣</mo><mi>u</mi><mo>)</mo><mo>∝</mo><mi>L</mi><mo>(</mo><mi>θ</mi><mo>∣</mo><mi>u</mi><mo>)</mo><mo>⋅</mo><mi>f</mi><mo>(</mo><mi>θ</mi><mo>)</mo></mrow></math></div></div>
+        <div><span>3 · Média da posterior (EAP)</span><div class="tri-equation tri-equation-small"><math display="block"><mrow><mover><mi>θ</mi><mo>^</mo></mover><msub><mspace width="0.1em"/><mtext>EAP</mtext></msub><mo>=</mo><mfrac><mrow><mo>∫</mo><mi>θ</mi><mi>L</mi><mo>(</mo><mi>θ</mi><mo>∣</mo><mi>u</mi><mo>)</mo><mi>f</mi><mo>(</mo><mi>θ</mi><mo>)</mo><mi>d</mi><mi>θ</mi></mrow><mrow><mo>∫</mo><mi>L</mi><mo>(</mo><mi>θ</mi><mo>∣</mo><mi>u</mi><mo>)</mo><mi>f</mi><mo>(</mo><mi>θ</mi><mo>)</mo><mi>d</mi><mi>θ</mi></mrow></mfrac></mrow></math></div></div>
+      </div>
+      <p class="tri-nota">O simulador abaixo aproxima essas integrais por quadratura numérica em θ ∈ [−6, 6]. Os parâmetros dos itens ficam fixos nos valores da base. Não recalibramos a prova e não reproduzimos o processamento oficial do INEP.</p>
+    </div>
+  </details>
+
+  <details id="tri-respostas" class="tri-card tri-accordion">
+    <summary><span><b>07 · Mesmo número de acertos, proficiências diferentes?</b><small>Compare dois padrões de respostas no mesmo caderno usando EAP</small></span><span class="tri-accordion-icone" aria-hidden="true">⌄</span></summary>
+    <div class="tri-accordion-corpo">
+      <p>Vamos construir dois participantes hipotéticos com a <b>mesma quantidade de acertos</b>. O primeiro acerta os itens com menores valores de dificuldade <i>b</i>; o segundo acerta os itens com maiores valores de <i>b</i>. Os demais são considerados erros. Assim, podemos observar como os parâmetros dos itens influenciam a estimativa EAP.</p>
+      <div class="tri-b-metodo" aria-label="Como os itens são ordenados por dificuldade">
+        <h3>Como definimos os itens mais fáceis e mais difíceis?</h3>
+        <p>Ordenamos as questões válidas do <b>caderno selecionado</b> pelo parâmetro de dificuldade <b>b</b>. Quanto menor o valor de b, mais à esquerda está a transição da CCI; quanto maior, mais à direita. A classificação é <b>relativa ao caderno</b>, não uma divisão oficial do INEP em níveis fixos.</p>
+        <div class="tri-b-exemplos" role="table" aria-label="Exemplos ilustrativos de dificuldade">
+          <div role="row"><b role="cell">b = −2,0</b><span role="cell">Menor dificuldade</span></div>
+          <div role="row"><b role="cell">b = −1,0</b><span role="cell">Mais fácil</span></div>
+          <div role="row"><b role="cell">b = 0,0</b><span role="cell">Intermediária</span></div>
+          <div role="row"><b role="cell">b = 1,0</b><span role="cell">Mais difícil</span></div>
+          <div role="row"><b role="cell">b = 2,0</b><span role="cell">Maior dificuldade</span></div>
+        </div>
+        <p class="tri-nota">Esses cinco valores são apenas exemplos didáticos, não pontos de corte. O simulador escolhe exatamente as <b>k menores</b> e as <b>k maiores</b> dificuldades do caderno. Havendo empate de b, a posição da questão serve apenas para ordenar os itens empatados.</p>
+        <div class="tri-b-extremos" id="triFaixaB" role="status">Aguardando caderno…</div>
+        <details class="tri-b-detalhes" id="triBDetalhes">
+          <summary>Consultar o b de cada questão e sua posição no ranking</summary>
+          <div class="tri-b-tabela-container"><table class="tri-b-tabela">
+            <thead><tr><th>Ranking</th><th>Questão</th><th>b oficial</th><th>Padrão com acerto</th></tr></thead>
+            <tbody id="triTabelaB"><tr><td colspan="4">Selecione um caderno.</td></tr></tbody>
+          </table></div>
+        </details>
+      </div>
+      <div class="tri-linha-cabecalho">
+        <div class="tri-caderno-resumo" id="triEapCabecalho">Selecione um caderno com itens válidos.</div>
+        <label class="tri-slider tri-slider-acertos"><span><b>Acertos em cada padrão</b><output id="triAcertosValor">—</output></span><input type="range" id="triAcertos" min="0" max="45" step="1" value="20" aria-label="Quantidade de acertos de cada participante"></label>
+      </div>
+      <div class="tri-metricas">
+        <div><small>EAP · acertos em itens mais fáceis</small><strong id="triEapFacil">—</strong></div>
+        <div><small>EAP · acertos em itens mais difíceis</small><strong id="triEapDificil">—</strong></div>
+        <div><small>Diferença (difíceis − fáceis)</small><strong id="triEapDelta">—</strong></div>
+      </div>
+      <div class="tri-nota-escala">
+        <div class="tri-nota-escala-formula" role="math" aria-label="Nota ilustrativa igual a quinhentos mais cem vezes teta estimado">Nota ilustrativa ≈ 500 + 100 × θ̂<sub>EAP</sub></div>
+        <p>A transformação pressupõe que θ̂ esteja na escala padronizada correspondente. <b>Não é a nota oficial do INEP</b>: o processo completo de correção e a vinculação à escala oficial não estão sendo reproduzidos aqui. O valor abaixo serve para visualizar a proficiência em uma métrica familiar.</p>
+      </div>
+      <div class="tri-metricas tri-metricas-notas">
+        <div><small>Nota ilustrativa · padrão A</small><strong id="triEapNotaFacil">—</strong></div>
+        <div><small>Nota ilustrativa · padrão B</small><strong id="triEapNotaDificil">—</strong></div>
+        <div><small>Diferença entre notas (B − A)</small><strong id="triEapNotaDelta">—</strong></div>
+      </div>
+      <div class="tri-grafico tri-grafico-longo" id="triGraficoEAP" role="img" aria-label="Distribuições posteriores de proficiência dos dois padrões com o mesmo número de acertos"></div>
+      <div class="tri-padroes">
+        <div><h3>Padrão A · acertos nos itens mais fáceis</h3><div id="triPadraoA" class="tri-resposta-grade"></div></div>
+        <div><h3>Padrão B · acertos nos itens mais difíceis</h3><div id="triPadraoB" class="tri-resposta-grade"></div></div>
+      </div>
+      <p id="triEapInterpretacao" class="tri-explicacao" aria-live="polite"></p>
+      <p class="tri-nota">Quadrados preenchidos indicam acertos. O critério “mais fácil/difícil” usa exclusivamente o parâmetro b para organizar os exemplos; a estimativa EAP utiliza também a e c. Proficiências θ não são notas oficiais do ENEM, e o modelo não aplica penalização manual por “incoerência”.</p>
+    </div>
+  </details>
+  <details id="tri-respostas-livres" class="tri-card tri-accordion">
+    <summary><span><b>08 · Marque as questões que você acertou</b><small>Estime sua nota com margem orientativa, quando disponível</small></span><span class="tri-accordion-icone" aria-hidden="true">⌄</span></summary>
+    <div class="tri-accordion-corpo">
+      <p>Escolha <b>ano, área, cor e código da prova</b> na seção 02. Clique nas questões que você <b>acertou</b> no caderno escolhido; as demais questões <b>válidas</b> serão consideradas <b>incorretas</b>. Itens anulados ou sem parâmetros válidos aparecem desabilitados e não entram na estimação.</p>
+      <div class="tri-caderno-resumo" id="triPessoalCaderno">Escolha um caderno na seção 02.</div>
+      <div class="tri-pessoal-legenda" aria-label="Legenda do simulador"><span class="tri-pessoal-pill tri-pessoal-pill-acerto">✓ Acertou</span><span class="tri-pessoal-pill">Não selecionada = errou</span><span class="tri-pessoal-pill tri-pessoal-pill-invalida">Excluída / inválida</span></div>
+      <div id="triPessoalGrade" class="tri-pessoal-grade" role="group" aria-label="Marcar questões corretas"></div>
+      <div class="tri-pessoal-acoes">
+        <div id="triPessoalContagem" class="tri-caderno-resumo" role="status">0 questões marcadas</div>
+        <div class="tri-pessoal-botoes"><button type="button" id="triPessoalLimpar" class="tri-btn tri-btn-outline">Limpar marcações</button><button type="button" id="triPessoalCalcular" class="tri-btn tri-btn-principal">Calcular minha nota</button></div>
+      </div>
+      <p class="tri-nota">O cálculo utiliza somente os parâmetros originais dos itens deste caderno, e não eventuais alterações feitas nos controles da CCI. As marcações ficam apenas nesta página e são reiniciadas quando você muda de caderno, ano, área ou língua. Nenhuma informação pessoal precisa ser fornecida.</p>
+      <!-- TRI V9 — resultado publico simplificado -->
+      <section id="triEscalaCalibrada" class="tri-escala-calibrada tri-v9-resultado" aria-label="Resultado estimado da nota">
+        <div class="tri-escala-cabecalho"><h3>Sua nota estimada</h3><span id="triEscalaSituacao" class="tri-escala-situacao" role="status">Carregando…</span></div>
+        <div class="tri-v9-nota" aria-live="polite"><strong id="triEscalaNota">—</strong><span>pontos</span></div>
+        <p class="tri-v9-resumo" id="triV9Resumo">Marque as questões corretas e clique em “Calcular minha nota”.</p>
+        <div class="tri-v9-faixa" role="group" aria-label="Margem e faixa de variação estimada">
+          <div><small>Margem orientativa</small><strong id="triV6Margem">—</strong></div>
+          <div><small>Faixa estimada</small><strong id="triV6Intervalo">—</strong></div>
+        </div>
+        <p id="triV6MargemAviso" class="tri-v9-nota-aviso">Quando disponível, a margem é baseada em erros observados em participantes com quantidade de acertos semelhante, ampliada por cautela.</p>
+        <p class="tri-v9-disclaimer">Resultado estatístico <b>não oficial</b>. Não é uma nota emitida ou garantida pelo INEP.</p>
+      </section>
+      <details id="triV6Detalhes" class="tri-v6-detalhes tri-v9-detalhes">
+        <summary>Detalhes do cálculo <span>Ver proficiência, coeficientes e gráfico estatístico (opcional)</span></summary>
+        <div class="tri-v6-detalhes-corpo">
+          <div class="tri-metricas tri-pessoal-metricas">
+            <div><small>Questões corretas consideradas</small><strong id="triPessoalN">—</strong></div>
+            <div><small>Proficiência estimada (θ̂ EAP)</small><strong id="triPessoalTheta">—</strong></div>
+          </div>
+          <p id="triEscalaExplicacao" class="tri-escala-texto">A nota é calculada com os parâmetros oficiais dos itens e coeficientes estimados por caderno.</p>
+          <p id="triEscalaCoeficientes" class="tri-escala-metricas"></p>
+          <p id="triPessoalStatus" class="tri-explicacao" role="status" aria-live="polite">Marque os acertos e calcule a estimativa.</p>
+          <div id="triPessoalGrafico" class="tri-grafico tri-grafico-longo" role="img" aria-label="Distribuições a priori e posterior da proficiência"></div>
+          <p class="tri-nota">Modelo EAP 3PL com priori normal e parâmetros fixos. O erro empírico da nota é diferente do desvio-padrão posterior de θ. O valor divulgado é uma aproximação estatística, não a nota oficial do INEP.</p>
+        </div>
+      </details>
+    </div>
+  </details>
+  <p class="tri-rodape-metodo">Fonte dos parâmetros: arquivos públicos de itens do INEP, edições de 2019 a 2023, tratados para este painel. Os parâmetros e as curvas do item selecionado são preservados; os padrões simulados representam participantes hipotéticos.</p>
+</section>
+
     <section id="pagina-dados" class="pagina-view" hidden>
 
         <div class="grade">
+
+
 
             <article class="painel-box col-4 prosa">
                 <header class="painel-box-topo"><h2>Origem</h2></header>
@@ -588,6 +833,14 @@
                     Parquet diretamente pelo navegador, com DuckDB compilado para WebAssembly —
                     não existe banco de dados nem servidor de aplicação por trás.
                 </p>
+                <p>
+                    Para a seção <strong>Entendendo a TRI</strong>, também são usados os arquivos
+                    oficiais <code>ITENS_PROVA_AAAA.csv</code> (2019 a 2023), com a identificação
+                    das questões e seus parâmetros psicométricos <em>a</em> (discriminação),
+                    <em>b</em> (dificuldade) e <em>c</em> (acerto casual). Esses parâmetros são
+                    fornecidos pelo <strong>INEP</strong>; a calibração para converter a proficiência
+                    em nota é uma etapa própria do projeto, feita com as notas oficiais.
+                </p>
             </article>
 
             <article class="painel-box col-4 prosa">
@@ -602,6 +855,10 @@
                         <code>internet</code>.</li>
                     <li>Agregações prontas para a página Geral em <code>GERAL.csv</code>
                         e <code>REDACAO.csv</code>.</li>
+                    <li>Para a TRI, correspondência entre <code>CO_PROVA</code>, caderno,
+                        posição, gabarito e parâmetros dos itens; questões anuladas ou sem
+                        parâmetros válidos são excluídas. Em Linguagens, considera-se
+                        a língua estrangeira selecionada.</li>
                 </ul>
             </article>
 
@@ -619,6 +876,11 @@
                         classificação oficial do INEP.</dd>
                     <dt>Treineiro</dt>
                     <dd>Quem fez a prova sem intenção de usar a nota no ano corrente.</dd>
+                    <dt>Nota estimada pela TRI</dt>
+                    <dd>Simulação experimental com modelo 3PL e estimação EAP a partir do
+                        padrão de respostas. A proficiência estimada é convertida pela
+                        relação <strong>Nota = A × EAP + B</strong>, com coeficientes calibrados
+                        pelo projeto. <strong>Não é uma nota oficial do INEP.</strong></dd>
                 </dl>
             </article>
 
@@ -659,6 +921,24 @@
                                 <td>Individual</td>
                                 <td>Redações Zeradas</td>
                             </tr>
+                            <tr>
+                                <td><code>dados/tri/catalogo_itens.json</code></td>
+                                <td>Itens e parâmetros oficiais válidos para curvas CCI, FII, FIT e EAP</td>
+                                <td>Ano × área × prova × item</td>
+                                <td>Entendendo a TRI</td>
+                            </tr>
+                            <tr>
+                                <td><code>dados/tri/mapa_cadernos.json</code></td>
+                                <td>Associação entre códigos das provas, cadernos, gabaritos, posições e aplicações</td>
+                                <td>Prova × caderno × item</td>
+                                <td>Entendendo a TRI</td>
+                            </tr>
+                            <tr>
+                                <td><code>Calibracao_TRI_ENEM/<wbr>coeficientes_tri_painel_publico_v9.json</code></td>
+                                <td>Coeficientes A e B, disponibilidade de estimativas e faixas de variação</td>
+                                <td>Área × caderno e faixas de acertos</td>
+                                <td>Estime sua nota (TRI)</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -679,7 +959,57 @@
                         <code>python -m http.server</code> não tem.</li>
                     <li>Os percentuais são calculados sobre o recorte filtrado, não sobre o total
                         nacional.</li>
+                    <li>O módulo TRI combina o <strong>modelo 3PL</strong> com estimação
+                        <strong>EAP</strong> (priori normal padrão e integração numérica em
+                        121 pontos no intervalo −6 a 6). A redação não é estimada pelo 3PL.</li>
+                    <li>As notas simuladas e as faixas de variação são <strong>experimentais</strong>,
+                        não oficiais nem certificadas pelo INEP. As faixas não equivalem a
+                        intervalos formais de confiança de 95% ou a limites garantidos de erro.</li>
                 </ul>
+                <details style="margin-top: 12px;">
+                    <summary style="cursor: pointer; font-weight: 600;">Critérios de estimação e auditoria da TRI</summary>
+                    <div style="padding-top: 10px;">
+                        <p>Na calibração por área, são considerados registros com presença válida,
+                            nota oficial positiva, respostas aproveitáveis e correspondência com
+                            os parâmetros dos itens. O participante pode ter zero acertos e permanecer
+                            na base se marcou pelo menos uma alternativa válida.</p>
+                        <p>Na auditoria documentada no projeto, foram examinados 260 cadernos:
+                            240 com estimativa experimental disponível e 20 bloqueados por alertas.
+                            A divisão utilizada foi 60% para treinamento, 20% para calibração das
+                            margens e 20% para teste. As margens são divulgadas apenas nas faixas
+                            que passaram pela triagem de amostra e cobertura.</p>
+                        <p>Em provas de Linguagens, as respostas são ajustadas à língua estrangeira
+                            escolhida. Resultados de comparações entre grupos não demonstram
+                            relações de causa e efeito.</p>
+                    </div>
+                </details>
+            </article>
+
+            <article class="painel-box col-12 prosa" aria-labelledby="dadosFontesTitulo">
+                <header class="painel-box-topo"><h2 id="dadosFontesTitulo">Fontes e documentação</h2></header>
+                <p>As fontes originais são do <strong>INEP</strong>. A monografia e o documento
+                    sobre a construção do VÉRTICE ENEM complementam as explicações sobre
+                    o tratamento dos dados, a TRI e o funcionamento do painel.</p>
+                <div class="vertice-tri-links">
+                    <a class="vertice-tri-link"
+                       href="https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/enem"
+                       target="_blank" rel="noopener noreferrer">Microdados do ENEM (INEP)</a>
+                    <a class="vertice-tri-link"
+                       href="https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos"
+                       target="_blank" rel="noopener noreferrer">Provas e gabaritos (INEP)</a>
+                    <a class="vertice-tri-link"
+                      href="https://github.com/Carolinedeoli/Monografia"
+                          target="_blank" rel="noopener noreferrer">Página Monografia (GitHub)</a>
+                    <a class="vertice-tri-link"
+                      href="docs/Nota%20T%C3%A9cnica%20V%C3%89RTICE%20ENEM.pdf"
+                      target="_blank" rel="noopener noreferrer">
+                      Como o painel foi construído (Nota Técnica)
+                    </a>
+                </div>
+                <p style="margin-bottom: 0; font-size: .88em; opacity: .85;">
+                    Os dois últimos documentos serão disponibilizados aqui após a publicação;
+                    não há links ativos para arquivos ainda ausentes do repositório.
+                </p>
             </article>
         </div>
     </section>

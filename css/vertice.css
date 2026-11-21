@@ -1,0 +1,42 @@
+/* VÉRTICE ENEM • Identidade suplementar, não altera o motor dos gráficos. */
+:root {
+  --marca: #102C42;
+  --marca-2: #183F56;
+  --marca-clara: #177E8D;
+  --vertice-acento: #1C92A0;
+  --vertice-ouro: #E5B66D;
+}
+:root[data-tema="escuro"] {
+  --marca: #101D2B;
+  --marca-2: #1A3445;
+  --marca-clara: #65CED1;
+  --vertice-acento: #73D5D6;
+  --vertice-ouro: #EACA90;
+}
+.logo-painel .logo-marca { display:flex; align-items:center; justify-content:center; width:44px; height:44px; flex:0 0 44px; border-radius:12px; background:rgba(255,255,255,.09); box-shadow:inset 0 0 0 1px rgba(255,255,255,.15); }
+.logo-painel .logo-texto strong {font-weight:800;letter-spacing:.09em; font-size:1.07rem}
+.logo-painel .logo-texto small {letter-spacing:.07em;opacity:.82}
+.vertice-eyebrow {font-size:.67rem; font-weight:800; letter-spacing:.13em; text-transform:uppercase; color:var(--marca-clara);margin-bottom:5px}
+.vertice-hero {display:grid;grid-template-columns:minmax(0,1fr) 170px;align-items:center;gap:20px;border-radius:16px; padding:25px 28px; margin-bottom:16px; background:linear-gradient(115deg,#102C42 4%,#195168 75%,#1E6878 100%);color:#F4FAFC;position:relative;overflow:hidden;box-shadow:0 10px 28px rgba(16,44,66,.14)}
+.vertice-hero::before {content:"";position:absolute;border-radius:50%;width:300px;height:300px;right:-130px;top:-190px;border:1px solid rgba(255,255,255,.16)}
+.vertice-hero h2 {font-size:clamp(1.25rem,2.1vw,1.9rem);line-height:1.22;letter-spacing:-.035em;max-width:740px;margin:9px 0}
+.vertice-hero p {max-width:730px;color:#D5ECF2;line-height:1.7;font-size:.94rem}
+.vertice-kicker {font-size:.69rem;font-weight:800;letter-spacing:.15em;color:#9DE2E6}
+.vertice-hero-tags {display:flex;flex-wrap:wrap;gap:7px;margin-top:17px}
+.vertice-hero-tags span {border:1px solid rgba(213,239,242,.3);background:rgba(255,255,255,.08);border-radius:999px;padding:5px 10px;font-size:.74rem;color:#EEF9FA}
+.vertice-hero-arte svg {width:100%;height:auto;filter:drop-shadow(0 7px 12px rgba(0,0,0,.1))}
+.vertice-sobre-abertura {border-left:4px solid var(--marca-clara);background:var(--superficie)}
+.vertice-sobre-abertura p {line-height:1.65;margin-top:12px}
+.vertice-sobre-marca h2 {font-size:1.21rem;line-height:1.32;margin-top:4px}
+.vertice-sobre-kicker {font-size:.67rem;font-weight:800;letter-spacing:.14em;color:var(--marca-clara)}
+.vertice-sobre-tabela th {white-space:normal;min-width:130px}
+.vertice-sobre-tabela td {line-height:1.5;vertical-align:top}
+.vertice-nota-fonte {padding:10px 0 0;color:var(--tinta-2);font-size:.85rem}
+.vertice-sobre-metodo p {margin:8px 0;line-height:1.62}
+.vertice-passos {counter-reset:passo;list-style:none;padding:0;margin:9px 0 14px;display:grid;gap:11px}
+.vertice-passos li {position:relative;padding-left:31px;line-height:1.57}
+.vertice-passos li::before {counter-increment:passo;content:counter(passo);position:absolute;left:0;top:1px;background:var(--marca-clara);color:#fff;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:.72rem;font-weight:800}
+.vertice-sobre-metodo .lista-marcada li {margin-top:8px;line-height:1.55}
+:root[data-tema="escuro"] .vertice-passos li::before {color:#07222A}
+@media(max-width:780px){.vertice-hero{grid-template-columns:1fr;padding:22px}.vertice-hero-arte{display:none}.vertice-hero-tags{gap:5px}}
+@media(prefers-reduced-motion:reduce){.vertice-hero,.logo-marca{transition:none!important}}

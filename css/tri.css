@@ -1,0 +1,170 @@
+/* TRI — folha isolada; herda os tokens claro/escuro do Painel-ENEM. */
+#pagina-tri {display:grid; gap:14px; padding-bottom:24px;}
+#pagina-tri .tri-intro {border:1px solid var(--borda);background:linear-gradient(115deg,var(--superficie),var(--superficie-2));border-radius:var(--raio);padding:22px 24px;}
+#pagina-tri .tri-intro-marca {text-transform:uppercase;letter-spacing:.15em;font-size:10px;font-weight:800;color:var(--marca-clara);margin-bottom:8px;}
+#pagina-tri .tri-intro h2 {font-size:23px;line-height:1.25;margin-bottom:6px;}
+#pagina-tri .tri-intro p {color:var(--tinta-2);max-width:920px;}
+#pagina-tri .tri-card {border:1px solid var(--borda);background:var(--superficie);border-radius:var(--raio);box-shadow:var(--sombra-1);padding:17px 19px;min-width:0;}
+#pagina-tri .tri-card-title {display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+#pagina-tri .tri-card-title h2 {font-size:16px;color:var(--tinta);}
+#pagina-tri .tri-card-title p {font-size:12px;color:var(--tinta-2);margin-top:3px;max-width:650px;}
+#pagina-tri .tri-chip {padding:5px 9px;background:var(--superficie-3);border-radius:6px;font-size:11px;font-weight:650;color:var(--tinta-2);white-space:nowrap;}
+#pagina-tri .tri-equation {padding:20px 12px 15px;overflow-x:auto;background:var(--superficie-2);border:1px solid var(--borda);border-radius:10px;margin-bottom:13px;text-align:center;color:var(--tinta);}
+#pagina-tri .tri-equation math {font-size:clamp(16px,2.3vw,23px);min-width:max-content;}
+#pagina-tri .tri-equation-small {padding:12px 8px;margin-bottom:7px;}
+#pagina-tri .tri-equation-small math {font-size:clamp(12px,1.5vw,16px);}
+#pagina-tri .tri-parametros-explicados {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
+#pagina-tri .tri-parametros-explicados>div {border:1px solid var(--borda);border-radius:8px;padding:11px;background:var(--superficie-2);display:flex;flex-direction:column;gap:4px;}
+#pagina-tri .tri-parametros-explicados b {font-size:12px;color:var(--tinta);}
+#pagina-tri .tri-parametros-explicados span {font-size:11px;line-height:1.5;color:var(--tinta-2);}
+#pagina-tri .tri-nota {font-size:11px;color:var(--tinta-3);line-height:1.55;margin-top:12px;}
+#pagina-tri .tri-aviso {font-size:12px;color:var(--tinta-2);background:var(--superficie-2);border-radius:8px;padding:9px 11px;margin-bottom:12px;}
+#pagina-tri .tri-aviso.tri-erro {border:1px solid #d97706;color:var(--tinta);}
+#pagina-tri .tri-seletores {display:grid;grid-template-columns:minmax(90px,.55fr) minmax(145px,1fr) minmax(185px,1.55fr) minmax(170px,1fr) minmax(165px,1fr);gap:10px;align-items:end;}
+#pagina-tri .tri-seletores label,#pagina-tri .tri-seletor-cor {display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:650;color:var(--tinta-2);min-width:0;}
+#pagina-tri select {padding:9px 11px;width:100%;max-width:100%;border:1px solid var(--borda-forte);background:var(--superficie);color:var(--tinta);border-radius:8px;min-height:39px;font-size:12px;}
+#pagina-tri select:disabled {opacity:.58;}
+#pagina-tri .tri-cores {display:flex;flex-wrap:wrap;gap:5px;min-height:39px;align-items:center;}
+#pagina-tri .tri-cor {font-size:11px;font-weight:600;color:var(--tinta-2);border:1px solid var(--borda-forte);background:var(--superficie);border-radius:8px;padding:8px 9px;display:flex;align-items:center;gap:5px;cursor:pointer;transition:border-color .12s,background .12s;}
+#pagina-tri .tri-cor:hover,#pagina-tri .tri-cor[aria-pressed="true"] {border-color:var(--marca-clara);background:var(--superficie-3);}
+#pagina-tri .tri-cor .tri-bolinha {display:inline-block;width:12px;height:12px;border-radius:100%;flex:0 0 auto;border:1px solid #9997;}
+#pagina-tri .tri-item-info {display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+#pagina-tri .tri-item-info span {font-size:11px;background:var(--superficie-2);border:1px solid var(--borda);border-radius:7px;padding:6px 9px;color:var(--tinta-2);}
+#pagina-tri .tri-simulacao {display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:stretch;}
+#pagina-tri .tri-grafico {height:310px;min-height:260px;}
+#pagina-tri .tri-controles {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 18px;margin:7px 0 8px;}
+#pagina-tri .tri-slider {display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--tinta-2);}
+#pagina-tri .tri-slider>span {display:flex;justify-content:space-between;gap:10px;align-items:center;}
+#pagina-tri .tri-slider output {color:var(--marca-clara);font-weight:800;font-variant-numeric:tabular-nums;}
+#pagina-tri .tri-slider input {width:100%;accent-color:var(--marca-clara);cursor:pointer;}
+#pagina-tri .tri-check {display:flex;align-items:center;gap:7px;margin-top:12px;font-size:11px;color:var(--tinta-2);cursor:pointer;}
+#pagina-tri .tri-check input {accent-color:var(--marca-clara);}
+#pagina-tri .tri-metricas {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:4px;}
+#pagina-tri .tri-metricas-duas {grid-template-columns:repeat(2,minmax(0,1fr));}
+#pagina-tri .tri-metricas>div {background:var(--superficie-2);border:1px solid var(--borda);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:4px;}
+#pagina-tri .tri-metricas small {color:var(--tinta-3);font-size:10px;}
+#pagina-tri .tri-metricas strong {color:var(--tinta);font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;}
+#pagina-tri .tri-explicacao {margin-top:11px;color:var(--tinta-2);font-size:12px;line-height:1.65;}
+#pagina-tri .tri-btn {border:1px solid var(--borda-forte);border-radius:8px;padding:8px 10px;font-size:11px;font-weight:700;cursor:pointer;background:var(--superficie-2);color:var(--tinta);}
+#pagina-tri .tri-btn:hover {border-color:var(--marca-clara);}
+#pagina-tri .tri-proximos p {color:var(--tinta-2);font-size:12px;line-height:1.7;margin-top:8px;}
+@media (max-width:1350px){#pagina-tri .tri-seletores {grid-template-columns:repeat(3,minmax(0,1fr));}#pagina-tri .tri-seletor-cor {grid-column:span 1;}#pagina-tri .tri-simulacao {grid-template-columns:1fr;}#pagina-tri .tri-grafico {height:340px;}}
+@media (max-width:850px){#pagina-tri .tri-parametros-explicados{grid-template-columns:repeat(2,minmax(0,1fr));}#pagina-tri .tri-seletores{grid-template-columns:repeat(2,minmax(0,1fr));}#pagina-tri .tri-seletor-cor {grid-column:1 / -1;}}
+@media (max-width:480px){#pagina-tri .tri-intro{padding:16px;}#pagina-tri .tri-card {padding:13px;}#pagina-tri .tri-parametros-explicados,#pagina-tri .tri-seletores,#pagina-tri .tri-controles{grid-template-columns:1fr;}#pagina-tri .tri-metricas{grid-template-columns:1fr;}#pagina-tri .tri-metricas-duas{grid-template-columns:repeat(2,minmax(0,1fr));}#pagina-tri .tri-cor{padding:7px;}#pagina-tri .tri-intro h2{font-size:19px;}}
+
+/* TRI V2: navegação interna, informação do teste e EAP. */
+#pagina-tri .tri-indice {padding:15px 18px;}
+#pagina-tri .tri-indice-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;}
+#pagina-tri .tri-indice-link{text-align:left;cursor:pointer;display:flex;align-items:center;gap:9px;padding:11px;border:1px solid var(--borda);background:var(--superficie-2);border-radius:9px;color:var(--tinta);font-size:12px;font-weight:650;min-height:44px;}
+#pagina-tri .tri-indice-link span{font-size:10px;font-weight:800;color:var(--marca-clara);}
+#pagina-tri .tri-indice-link:hover,#pagina-tri .tri-indice-link:focus-visible{border-color:var(--marca-clara);outline-offset:2px;background:var(--superficie-3);}
+#pagina-tri #tri-indice,#pagina-tri #tri-modelo,#pagina-tri #tri-itens,#pagina-tri #tri-cci,#pagina-tri #tri-fii,#pagina-tri #tri-fit,#pagina-tri #tri-eap,#pagina-tri #tri-respostas{scroll-margin-top:16px;}
+#pagina-tri .tri-accordion{padding:0;}
+#pagina-tri .tri-accordion>summary{list-style:none;cursor:pointer;padding:19px 20px;display:flex;gap:18px;align-items:center;justify-content:space-between;color:var(--tinta);}
+#pagina-tri .tri-accordion>summary::-webkit-details-marker{display:none;}
+#pagina-tri .tri-accordion>summary b{display:block;font-size:16px;}
+#pagina-tri .tri-accordion>summary small{display:block;font-weight:400;font-size:12px;color:var(--tinta-2);margin-top:5px;}
+#pagina-tri .tri-accordion-icone{font-size:24px;color:var(--marca-clara);transform:rotate(0deg);transition:transform .15s;}
+#pagina-tri details[open] .tri-accordion-icone{transform:rotate(180deg);}
+#pagina-tri .tri-accordion-corpo{border-top:1px solid var(--borda);padding:16px 20px 18px;color:var(--tinta-2);font-size:12px;line-height:1.7;}
+#pagina-tri .tri-linha-cabecalho{display:flex;gap:14px;align-items:end;justify-content:space-between;margin:14px 0;flex-wrap:wrap;}
+#pagina-tri .tri-caderno-resumo{color:var(--tinta-2);font-weight:650;font-size:12px;max-width:650px;}
+#pagina-tri .tri-seletor-inline{display:flex;gap:8px;align-items:center;font-size:11px;font-weight:650;color:var(--tinta-2);}
+#pagina-tri .tri-seletor-inline select{width:auto;min-width:195px;}
+#pagina-tri .tri-grafico-longo{height:330px;}
+#pagina-tri .tri-equacao-lista{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:13px 0;}
+#pagina-tri .tri-equacao-lista>div>span{display:block;color:var(--tinta);font-weight:700;font-size:12px;margin-bottom:6px;}
+#pagina-tri .tri-equacao-lista .tri-equation{height:95px;display:flex;align-items:center;justify-content:flex-start;}
+#pagina-tri .tri-equacao-lista math{font-size:16px;}
+#pagina-tri .tri-slider-acertos{min-width:210px;width:min(330px,100%);}
+#pagina-tri .tri-padroes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px;}
+#pagina-tri .tri-padroes>div{background:var(--superficie-2);border:1px solid var(--borda);padding:12px;border-radius:8px;min-width:0;}
+#pagina-tri .tri-padroes h3{font-size:12px;color:var(--tinta);margin:0 0 10px;}
+#pagina-tri .tri-resposta-grade{display:flex;gap:4px;flex-wrap:wrap;}
+#pagina-tri .tri-resposta-grade span{display:inline-flex;width:25px;height:25px;align-items:center;justify-content:center;border:1px solid var(--borda-forte);border-radius:5px;background:var(--superficie);font-size:10px;color:var(--tinta-2);font-variant-numeric:tabular-nums;}
+#pagina-tri .tri-resposta-grade span.tri-acerto{border-color:#23875b;background:#d6f5e5;color:#145637;font-weight:700;}
+#pagina-tri .tri-rodape-metodo{font-size:11px;color:var(--tinta-3);padding:0 8px;line-height:1.6;}
+@media(max-width:1150px){#pagina-tri .tri-indice-grid{grid-template-columns:repeat(3,minmax(0,1fr));}#pagina-tri .tri-equacao-lista{grid-template-columns:1fr;}}
+@media(max-width:650px){#pagina-tri .tri-indice-grid{grid-template-columns:repeat(2,minmax(0,1fr));}#pagina-tri .tri-padroes{grid-template-columns:1fr;}#pagina-tri .tri-accordion>summary{padding:14px;}#pagina-tri .tri-accordion-corpo{padding:12px 14px;}#pagina-tri .tri-equacao-lista math{font-size:14px;}}
+@media(max-width:400px){#pagina-tri .tri-indice-grid{grid-template-columns:1fr;}}
+
+/* TRI v3: distribuição do parâmetro b, notas ilustrativas e acertos pessoais. */
+#pagina-tri .tri-b-metodo {margin:13px 0 16px;padding:14px;border:1px solid var(--borda);border-radius:10px;background:var(--superficie-2);}
+#pagina-tri .tri-b-metodo h3 {font-size:13px;color:var(--tinta);margin-bottom:5px;}
+#pagina-tri .tri-b-metodo p {font-size:12px;line-height:1.6;margin-bottom:8px;}
+#pagina-tri .tri-b-exemplos {display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:10px 0;}
+#pagina-tri .tri-b-exemplos>div {display:flex;flex-direction:column;text-align:center;border:1px solid var(--borda);border-radius:7px;padding:9px 4px;background:var(--superficie);}
+#pagina-tri .tri-b-exemplos b {color:var(--tinta);font-size:12px;}
+#pagina-tri .tri-b-exemplos span {font-size:10px;color:var(--tinta-2);}
+#pagina-tri .tri-b-extremos {border-left:3px solid var(--marca-clara);padding:8px 11px;margin:10px 0;background:var(--superficie);border-radius:5px;font-size:12px;color:var(--tinta);}
+#pagina-tri .tri-b-detalhes {margin-top:10px;}
+#pagina-tri .tri-b-detalhes summary {font-size:12px;cursor:pointer;font-weight:700;color:var(--marca-clara);}
+#pagina-tri .tri-b-tabela-container {max-height:320px;overflow:auto;border:1px solid var(--borda);border-radius:8px;margin-top:10px;}
+#pagina-tri .tri-b-tabela {width:100%;border-collapse:collapse;text-align:left;font-size:11px;}
+#pagina-tri .tri-b-tabela th,#pagina-tri .tri-b-tabela td {padding:7px 10px;border-bottom:1px solid var(--borda);}
+#pagina-tri .tri-b-tabela th {position:sticky;top:0;background:var(--superficie-2);color:var(--tinta);}
+#pagina-tri .tri-b-tabela td {color:var(--tinta-2);font-variant-numeric:tabular-nums;}
+#pagina-tri .tri-nota-escala {margin:14px 0 10px;background:var(--superficie-2);border:1px solid var(--borda);border-radius:9px;padding:12px 14px;}
+#pagina-tri .tri-nota-escala-formula {font-size:16px;font-weight:750;color:var(--tinta);margin-bottom:5px;}
+#pagina-tri .tri-nota-escala p {font-size:11px;color:var(--tinta-2);line-height:1.5;}
+#pagina-tri .tri-metricas-notas strong {color:var(--marca-clara);}
+#pagina-tri .tri-pessoal-legenda {display:flex;flex-wrap:wrap;gap:7px;margin:12px 0;}
+#pagina-tri .tri-pessoal-pill {display:inline-flex;align-items:center;padding:4px 8px;border:1px solid var(--borda-forte);border-radius:15px;font-size:10px;color:var(--tinta-2);background:var(--superficie);}
+#pagina-tri .tri-pessoal-pill-acerto {background:#d6f5e5;color:#145637;border-color:#23875b;}
+#pagina-tri .tri-pessoal-pill-invalida {opacity:.65;background:var(--superficie-2);}
+#pagina-tri .tri-pessoal-grade {display:grid;grid-template-columns:repeat(auto-fill,minmax(51px,1fr));gap:7px;margin:10px 0 13px;}
+#pagina-tri .tri-pessoal-questao {border:1px solid var(--borda-forte);border-radius:8px;min-height:41px;display:flex;align-items:center;justify-content:center;background:var(--superficie);color:var(--tinta);font-size:12px;font-weight:700;cursor:pointer;font-variant-numeric:tabular-nums;}
+#pagina-tri .tri-pessoal-questao:hover:not(:disabled) {border-color:var(--marca-clara);background:var(--superficie-3);}
+#pagina-tri .tri-pessoal-questao[aria-pressed="true"] {background:#d6f5e5;color:#145637;border-color:#23875b;box-shadow:inset 0 0 0 1px #23875b;}
+#pagina-tri .tri-pessoal-questao:focus-visible {outline:3px solid var(--marca-clara);outline-offset:2px;}
+#pagina-tri .tri-pessoal-questao:disabled {opacity:.4;cursor:not-allowed;background:var(--superficie-2);text-decoration:line-through;}
+#pagina-tri .tri-pessoal-acoes {display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-top:12px;}
+#pagina-tri .tri-pessoal-botoes {display:flex;gap:8px;flex-wrap:wrap;}
+#pagina-tri .tri-btn-principal {background:var(--marca-clara);border-color:var(--marca-clara);color:#fff;}
+#pagina-tri .tri-btn-principal:hover {filter:brightness(.94);}
+#pagina-tri .tri-pessoal-metricas {margin-top:16px;}
+@media(max-width:650px){#pagina-tri .tri-b-exemplos {grid-template-columns:repeat(3,minmax(0,1fr));}#pagina-tri .tri-nota-escala-formula {font-size:14px;}}
+@media(max-width:400px){#pagina-tri .tri-b-exemplos {grid-template-columns:repeat(2,minmax(0,1fr));}}
+
+/* TRI V4 — painel da escala calibrada e língua estrangeira. */
+#pagina-tri #triLinguaGrupo:not([hidden]) {border:1px solid var(--borda-forte);border-radius:8px;padding:8px 10px;background:var(--superficie-2);font-weight:700;}
+#pagina-tri .tri-escala-calibrada {margin-top:14px;padding:15px;border:1px solid var(--borda);border-radius:11px;background:var(--superficie-2);}
+#pagina-tri .tri-escala-cabecalho {display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap;margin-bottom:9px;}
+#pagina-tri .tri-escala-cabecalho h3 {font-size:14px;color:var(--tinta);margin:0;}
+#pagina-tri .tri-escala-situacao {font-size:11px;border:1px solid var(--borda-forte);border-radius:14px;padding:4px 10px;color:var(--tinta-2);background:var(--superficie);}
+#pagina-tri .tri-escala-resultado {display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:6px;}
+#pagina-tri .tri-escala-resultado strong {font-size:25px;color:var(--marca-clara);font-variant-numeric:tabular-nums;}
+#pagina-tri .tri-escala-resultado span {font-size:11px;color:var(--tinta-2);}
+#pagina-tri .tri-escala-texto {font-size:12px;line-height:1.55;margin-bottom:9px;color:var(--tinta);}
+#pagina-tri .tri-escala-preview {font-size:12px;display:flex;align-items:flex-start;gap:8px;padding:8px 9px;margin:9px 0;border:1px dashed var(--borda-forte);border-radius:8px;background:var(--superficie);color:var(--tinta);cursor:pointer;}
+#pagina-tri .tri-escala-preview[hidden] {display:none;}
+#pagina-tri .tri-escala-preview input {accent-color:var(--marca-clara);margin-top:2px;}
+#pagina-tri .tri-escala-metricas {font-size:11px;color:var(--tinta-2);font-variant-numeric:tabular-nums;margin:8px 0;}
+#pagina-tri .tri-escala-aviso {font-size:11px;line-height:1.5;color:var(--tinta-2);}
+
+/* TRI V5 — escolha amigável de cadernos. */
+#pagina-tri .tri-v5-ajuda{margin-top:10px;line-height:1.55;}
+#pagina-tri .tri-v5-detalhes{margin:10px 0 12px;padding:10px 12px;border:1px solid var(--borda);border-radius:9px;background:var(--superficie-2);}
+#pagina-tri .tri-v5-detalhes summary{cursor:pointer;font-size:12px;font-weight:700;color:var(--marca-clara);}
+#pagina-tri .tri-v5-detalhes p{margin:10px 0 7px;font-size:12px;line-height:1.55;color:var(--tinta-2);}
+#pagina-tri .tri-v5-detalhes a{font-size:12px;color:var(--marca-clara);text-decoration:underline;}
+#pagina-tri .tri-v5-detalhes .tri-v5-codigo{font-size:11px;font-family:ui-monospace,Consolas,monospace;color:var(--tinta-2);}
+
+/* TRI V9 — nota, margem e faixa em destaque; detalhes opcionais. */
+#pagina-tri .tri-v9-resultado{padding:24px;display:flex;flex-direction:column;gap:14px;border-radius:14px;border:1px solid var(--borda);background:var(--superficie);}
+#pagina-tri .tri-v9-resultado .tri-escala-cabecalho{margin:0;}
+#pagina-tri .tri-v9-resultado .tri-escala-cabecalho h3{font-size:clamp(16px,2vw,19px);}
+#pagina-tri .tri-v9-nota{display:flex;align-items:baseline;justify-content:center;gap:10px;margin:5px 0 0;font-variant-numeric:tabular-nums;}
+#pagina-tri .tri-v9-nota strong{font-size:clamp(38px,6vw,64px);line-height:1.05;font-weight:750;color:var(--marca-clara);}
+#pagina-tri .tri-v9-nota span{font-size:15px;color:var(--tinta-2);}
+#pagina-tri .tri-v9-resumo{text-align:center;margin:0;color:var(--tinta-2);font-size:13px;}
+#pagina-tri .tri-v9-faixa{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+#pagina-tri .tri-v9-faixa>div{background:var(--superficie-2);border:1px solid var(--borda);border-radius:10px;padding:17px;display:flex;flex-direction:column;gap:7px;min-width:0;}
+#pagina-tri .tri-v9-faixa small{font-size:12px;color:var(--tinta-2);}
+#pagina-tri .tri-v9-faixa strong{font-size:clamp(17px,2vw,23px);color:var(--tinta);font-variant-numeric:tabular-nums;overflow-wrap:anywhere;}
+#pagina-tri .tri-v9-nota-aviso{font-size:11px;line-height:1.65;color:var(--tinta-2);margin:0;}
+#pagina-tri .tri-v9-disclaimer{font-size:11px;color:var(--tinta-2);margin:0;}
+#pagina-tri .tri-v9-detalhes{margin-top:12px;}
+#pagina-tri .tri-v9-detalhes>summary{cursor:pointer;padding:13px 15px;font-size:13px;font-weight:700;color:var(--marca-clara);}
+#pagina-tri .tri-v9-detalhes>summary span{display:block;font-weight:400;font-size:11px;color:var(--tinta-2);margin-top:4px;}
+@media(max-width:590px){#pagina-tri .tri-v9-resultado{padding:15px;}#pagina-tri .tri-v9-faixa{grid-template-columns:1fr;}}

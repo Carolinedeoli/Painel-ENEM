@@ -1,0 +1,38 @@
+/* VÉRTICE ENEM — apenas a nova seção das bases da TRI em Sobre os Dados */
+#pagina-dados .vertice-bases-tri {min-width:0; overflow:hidden;}
+#pagina-dados .vertice-tri-cabecalho {margin-bottom:15px;}
+#pagina-dados .vertice-tri-cabecalho h2 {margin:5px 0 9px; font-size:clamp(1.1rem,1.4vw,1.36rem);line-height:1.3;}
+#pagina-dados .vertice-tri-cabecalho p {line-height:1.65; max-width:950px;}
+#pagina-dados .vertice-tri-sobretitulo {color:var(--marca-clara,#177E8D);letter-spacing:.12em;font-size:.71rem;font-weight:800;}
+#pagina-dados .vertice-tri-tabela-rolagem {overflow-x:auto; max-width:100%; border:1px solid var(--borda,#dce5ed); border-radius:10px;}
+#pagina-dados .vertice-tri-fontes {width:100%;min-width:640px;border-collapse:collapse;text-align:left;font-size:.87rem;}
+#pagina-dados .vertice-tri-fontes th {background:var(--superficie-2,#edf4f7);font-weight:800;}
+#pagina-dados .vertice-tri-fontes td,#pagina-dados .vertice-tri-fontes th {padding:12px 15px;vertical-align:top;border-bottom:1px solid var(--borda,#e0e8ee);line-height:1.6;}
+#pagina-dados .vertice-tri-fontes tbody tr:last-child td {border-bottom:0;}
+#pagina-dados .vertice-tri-fontes td:first-child {width:35%;}
+#pagina-dados .vertice-tri-fontes td:nth-child(2) {width:18%;}
+#pagina-dados .vertice-tri-fontes td code {font-size:.79rem; overflow-wrap:anywhere;word-break:break-word;white-space:normal;}
+#pagina-dados .vertice-tri-fontes td small {display:block;opacity:.7;margin-top:3px;line-height:1.4;}
+#pagina-dados .vertice-tri-caption {position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+#pagina-dados .vertice-tri-observacao {font-size:.86rem;margin:13px 0 18px;line-height:1.6;}
+#pagina-dados .vertice-tri-resumo {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0 17px;}
+#pagina-dados .vertice-tri-resumo > div {border-radius:10px;padding:13px;background:var(--superficie-2,#eff5f7);border:1px solid var(--borda,#dce5ed);display:flex;flex-direction:column;gap:6px;}
+#pagina-dados .vertice-tri-resumo strong {color:var(--marca-clara,#177E8D);font-size:.91rem;}
+#pagina-dados .vertice-tri-resumo span {font-size:.78rem;line-height:1.5;}
+#pagina-dados .vertice-tri-detalhes {border-radius:9px;border:1px solid var(--borda,#dce5ed);margin:12px 0;padding:0;}
+#pagina-dados .vertice-tri-detalhes summary {cursor:pointer;font-weight:700;padding:13px 15px;line-height:1.5;}
+#pagina-dados .vertice-tri-detalhes summary:focus-visible {outline:2px solid var(--marca-clara,#177E8D);}
+#pagina-dados .vertice-tri-detalhes-corpo {padding:0 15px 14px;}
+#pagina-dados .vertice-tri-detalhes-corpo p {line-height:1.68;margin:9px 0;}
+#pagina-dados .vertice-tri-links {display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-top:15px;}
+#pagina-dados .vertice-tri-links .vertice-tri-doc {margin:0;}
+#pagina-dados .vertice-tri-link {display:inline-block;padding:8px 12px;border-radius:9px;border:1px solid var(--borda,#dce5ed);font-size:.81rem;font-weight:650;text-decoration:none;line-height:1.5;}
+#pagina-dados .vertice-tri-link:hover {text-decoration:underline;}
+html[data-tema="escuro"] #pagina-dados .vertice-tri-fontes th,
+html[data-tema="escuro"] #pagina-dados .vertice-tri-resumo > div {background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.15);}
+html[data-tema="escuro"] #pagina-dados .vertice-tri-tabela-rolagem,
+html[data-tema="escuro"] #pagina-dados .vertice-tri-detalhes {border-color:rgba(255,255,255,.15);}
+html[data-tema="escuro"] #pagina-dados .vertice-tri-fontes th,
+html[data-tema="escuro"] #pagina-dados .vertice-tri-fontes td {border-color:rgba(255,255,255,.1);}
+@media (max-width:1080px){#pagina-dados .vertice-tri-resumo {grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media (max-width:580px){#pagina-dados .vertice-tri-resumo {grid-template-columns:1fr;}}
